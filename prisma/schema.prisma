@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                   Int                @id @default(autoincrement())
+  productId            Int                @unique
+  price                Float
+  discountedPrice      Float
+  styleType            String
+  productTypeId        Int
+  articleNumber        String
+  visualTag            String?
+  productDisplayName   String
+  variantName          String
+  myntraRating         Float
+  catalogAddDate       Int
+  brandName            String
+  ageGroup             String
+  gender               String
+  baseColour           String
+  colour1              String?
+  colour2              String?
+  fashionType          String
+  season               String
+  year                 String
+  usage                String
+  vat                  Float
+  displayCategories    String?
+  weight               String
+  navigationId         Int
+  landingPageUrl       String
+  codEnabled           Boolean
+  isEMIEnabled         Boolean
+  masterCategory       MasterCategory?    @relation(fields: [masterCategoryId], references: [id])
+  subCategory          SubCategory?        @relation(fields: [subCategoryId], references: [id])
+  // articleType          ArticleType        @relation(fields: [articleTypeId], references: [id])
+  productDescriptors   ProductDescriptors? @relation(fields: [productDescriptorsId], references: [id])
+  // otherFlags           OtherFlag[]
+  styleOptions         StyleOption[]
+  // articleAttributes    ArticleAttributes  @relation(fields: [articleAttributesId], references: [id])
+  // brandUserProfile     BrandUserProfile   @relation(fields: [brandUserProfileUidx], references: [uidx])
+  // crossLinks           CrossLink[]
+  styleImages          StyleImages        @relation(fields: [styleImagesId], references: [id])
+  masterCategoryId     Int?
+  subCategoryId        Int?
+  // articleTypeId        Int
+  productDescriptorsId Int?
+  // articleAttributesId  Int
+  // brandUserProfileUidx String
+  styleImagesId        Int
+  discountData         DiscountData?      @relation(fields: [discountDataId], references: [id])
+  discountDataId       Int?
+}
+
+model MasterCategory {
+  id                   Int       @id @default(autoincrement())
+  uid                  Int
+  typeName             String
+  active               Boolean
+  socialSharingEnabled Boolean
+  isReturnable         Boolean
+  isExchangeable       Boolean
+  pickupEnabled        Boolean
+  isTryAndBuyEnabled   Boolean
+  Product              Product[]
+}
+
+model SubCategory {
+  id                   Int       @id @default(autoincrement())
+  uid                  Int
+  typeName             String
+  active               Boolean
+  socialSharingEnabled Boolean
+  isReturnable         Boolean
+  isExchangeable       Boolean
+  pickupEnabled        Boolean
+  isTryAndBuyEnabled   Boolean
+  Product              Product[]
+}
+
+// model ArticleType {
+//   id                   Int       @id
+//   typeName             String
+//   active               Boolean
+//   socialSharingEnabled Boolean
+//   isReturnable         Boolean
+//   isExchangeable       Boolean
+//   pickupEnabled        Boolean
+//   isTryAndBuyEnabled   Boolean
+//   isMyntsEnabled       Boolean
+//   Product              Product[]
+// }
+
+// model ServiceabilityDisclaimer {
+//   id    Int    @id @default(autoincrement())
+//   title String
+//   desc  String
+// }
+
+model ProductDescriptors {
+  id             Int       @id @default(autoincrement())
+  descriptorType String
+  value          String
+  Product        Product[]
+}
+
+// model OtherFlag {
+//   id        Int      @id @default(autoincrement())
+//   dataType  String
+//   name      String
+//   value     String
+//   Product   Product? @relation(fields: [productId], references: [id])
+//   productId Int?
+// }
+
+model StyleOption {
+  id                        Int      @id @default(autoincrement())
+  uid                       Int
+  name                      String
+  value                     String
+  unifiedSize               String?
+  unifiedSizeValue          String?
+  unifiedSizeScale          String?
+  allSize                   String?
+  skuId                     Int?
+  inventoryCount            Int?
+  available                 Boolean
+  active                    Boolean
+  skuAvailabilityDetailMap  Json?
+  warehouseIdToItemCountMap Json?
+  Product                   Product? @relation(fields: [productId], references: [id])
+  productId                 Int?
+}
+
+// model ArticleAttributes {
+//   id                Int       @id
+//   Fit               String
+//   Pattern           String
+//   BodyOrGarmentSize String    @map("Body or Garment Size")
+//   SleeveLength      String    @map("Sleeve Length")
+//   Neck              String
+//   Fabric            String
+//   Product           Product[]
+// }
+
+// model BrandUserProfile {
+//   uidx              String    @id @map("uidx")
+//   name              String
+//   image             String
+//   publicProfileId   String
+//   imageJsonEntryMap Json      @map("imageJsonEntryMap")
+//   tagsMap           Json
+//   Product           Product[]
+// }
+
+// model CrossLink {
+//   id        Int      @id @default(autoincrement())
+//   key       String
+//   value     String
+//   Product   Product? @relation(fields: [productId], references: [id])
+//   productId Int?
+// }
+
+model StyleImages {
+  id                 Int       @id @default(autoincrement())
+  default            String
+  sizeRepresentation String
+  search             String
+  back               String
+  left               String
+  front              String
+  right              String
+  Product            Product[]
+}
+
+model DiscountData {
+  id                   Int       @id @default(autoincrement())
+  discountType         Int?
+  discountAmount       Int?
+  discountId           Int?
+  discountRuleId       Int?
+  discountPercent      Int?
+  discountModifiedDate BigInt?
+  discountText         Json?
+  discountToolTipText  Json?
+  Product              Product[]
+}
