@@ -1,16 +1,11 @@
 "use client";
-import Layout from "@/app/layout";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { useHydrationRender } from "@/hooks/useHydratationRender";
-import { Product } from "@/models";
 import { buildUrlApi } from "@/utils/buildUrlApi";
-import { getProducts } from "@/utils/products";
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
-import { getHeaderLink } from "@/utils/headerLinks";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { Sort } from "@/components/sort";
 import { ListingSkeleton } from "@/components/listing-skeleton";
@@ -27,13 +22,14 @@ const ListingPage: NextPage = () => {
     query,
   });
 
-  const { data, error: errorData, isLoading } = useSWR(url, () => fetcher(url));
+  const { data, error, isLoading } = useSWR(url, () => fetcher(url), {
+    // revalidateOnMount: false,
+    // revalidateOnFocus: true,
+  });
   const products = data?.products;
   const pages = data?.pages;
   const totalProducts = data?.totalProducts;
   const isSearch = query?.search;
-
-  const error = data?.error;
   const [columns, setColumns] = useState(4);
 
   const toggleColumns = () => {
@@ -77,7 +73,7 @@ const ListingPage: NextPage = () => {
           ))
         )}
       </ul>
-      <Pagination pages={pages} />
+      {!isLoading && <Pagination pages={pages} />}
     </div>
   );
 };

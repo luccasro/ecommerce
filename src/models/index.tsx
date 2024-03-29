@@ -2,6 +2,10 @@ import {
   Product as ProductSchema,
   StyleImages as StyleImagesSchema,
   ProductDescriptors as ProductDescriptorsSchema,
+  MasterCategory as MasterCategorySchema,
+  SubCategory as SubCategorySchema,
+  StyleOption as StyleOptionSchema,
+  DiscountData as DiscountDataSchema,
 } from "@prisma/client";
 
 interface ArticleAttribute {
@@ -200,4 +204,8 @@ export interface Product {
 export interface ProductAdapted extends ProductSchema {
   styleImages: StyleImagesSchema;
   productDescriptors?: ProductDescriptorsSchema;
+  masterCategory?: MasterCategorySchema;
+  subCategory?: SubCategorySchema;
+  styleOptions?: StyleOptionSchema[];
+  discountData?: DiscountDataSchema;
 }
