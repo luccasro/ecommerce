@@ -16,16 +16,23 @@ async function main() {
   let products = jsonData.map((json: any) => changeIdToUid(json.data));
 
   products = products.map((product: any) => {
-    const { id, uid, lookGoodAlbum, style360Images, ...rest } = product;
+    const {
+      id,
+      uid,
+      lookGoodAlbum,
+      style360Images,
+      articleAttributes,
+      crossLinks,
+      brandUserProfile,
+      articleType,
+      otherFlags,
+      articleDisplayAttr,
+      colours,
+      ...rest
+    } = product;
+
     return {
       ...rest,
-      articleAttributes: undefined,
-      crossLinks: undefined,
-      brandUserProfile: undefined,
-      articleType: undefined,
-      otherFlags: undefined,
-      articleDisplayAttr: undefined,
-      colours: undefined,
       productId: uid,
       styleImages: {
         create: {
@@ -56,11 +63,18 @@ async function main() {
       discountData: {
         create: {
           ...(product?.discountData || {}),
+          discountText: undefined,
+          discountToolTipText: undefined,
         },
       },
       styleOptions: {
         create: product.styleOptions.map((option: any) => {
-          const { id, ...optionRest } = option;
+          const {
+            id,
+            skuAvailabilityDetailMap,
+            warehouseIdToItemCountMap,
+            ...optionRest
+          } = option;
           return {
             ...optionRest,
           };

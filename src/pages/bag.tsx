@@ -1,36 +1,57 @@
 "use client";
 import { Separator } from "@/components/ui/separator";
+import { ProductAdapted } from "@/models";
+import Image from "next/image";
+// import { buildUrlApi } from "@/utils/buildUrlApi";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import Link from "next/link";
+import { fetcher } from "@/utils/fetcher";
 
 const Bag: NextPage = () => {
+  const router = useRouter();
+  const { data, isLoading } = useSWR("/api/bag", fetcher);
+  const bagItems = data?.bagItems || [];
+
   return (
     <div>
       <div className="w-full">
+        {/* <h2 className="text-2xl font-semibold py-6"> Your Bag</h2> */}
+        <h1 className="font-bold uppercase italic py-6 text-lg sm:text-3xl">
+          Your bag
+        </h1>
+
         <div className="flex h-full flex-col sm:flex-row">
-          <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-            <h2 className="text-2xl font-medium">Bag</h2>
-
-            <div className="mt-8">
-              <div className="flow-root">
-                <ul role="list" className="my-6">
-                  <li className="flex py-6">
-                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                      <img
-                        src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg"
-                        alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
-                        className="h-full w-full object-cover object-center"
-                      />
+          <div className="sm:w-2/3 overflow-y-auto pr-4 py-6 sm:pr-6">
+            <ul role="list" className="my-6">
+              {bagItems?.map((bagItem: ProductAdapted) => (
+                <>
+                  <li className="flex pb-6">
+                    <div className="w-24 h-full flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                      <Link href={`/product/${bagItem.productId}`}>
+                        <Image
+                          src={bagItem.styleImages.default}
+                          alt={bagItem.productDisplayName}
+                          className="w-full object-cover object-top"
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                        />
+                      </Link>
                     </div>
 
                     <div className="ml-4 flex flex-1 flex-col">
                       <div>
                         <div className="flex justify-between text-base font-medium">
                           <h3>
-                            <a href="#">Throwback Hip Bag</a>
+                            <a href="#">{bagItem.productDisplayName}</a>
                           </h3>
-                          <p className="ml-4">$90.00</p>
+                          <p className="ml-4">${bagItem.price}</p>
                         </div>
-                        <p className="mt-1 text-sm text-gray-500">Salmon</p>
+                        <p className="mt-1 text-sm text-gray-500">
+                          {bagItem.baseColour}
+                        </p>
                       </div>
                       <div className="flex flex-1 items-end justify-between text-sm">
                         <p className="">Qty 1</p>
@@ -46,47 +67,14 @@ const Bag: NextPage = () => {
                       </div>
                     </div>
                   </li>
-                  <Separator />
-                  <li className="flex py-6">
-                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                      <img
-                        src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                        alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
-                        className="h-full w-full object-cover object-center"
-                      />
-                    </div>
-
-                    <div className="ml-4 flex flex-1 flex-col">
-                      <div>
-                        <div className="flex justify-between text-base font-medium">
-                          <h3>
-                            <a href="#">Medium Stuff Satchel</a>
-                          </h3>
-                          <p className="ml-4">$32.00</p>
-                        </div>
-                        <p className="mt-1 text-sm text-gray-500">Blue</p>
-                      </div>
-                      <div className="flex flex-1 items-end justify-between text-sm">
-                        <p className="">Qty 1</p>
-
-                        <div className="flex">
-                          <button
-                            type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
+                  <Separator className="mb-6" />
+                </>
+              ))}
+            </ul>
           </div>
 
-          <div className="rounded-lg px-4 py-6 sm:px-6">
-            <div className="">
+          {!!bagItems.length && (
+            <div className="sm:w-1/3 rounded-lg py-6 my-6 sm:pl-6">
               <h2 className="text-lg font-medium pb-6">Order summary</h2>
 
               <div className="flex justify-between text-base text-sm py-4">
@@ -104,7 +92,7 @@ const Bag: NextPage = () => {
                 <p>$8.00</p>
               </div>
               <Separator />
-              <div className="flex justify-between text-base font-md py-4">
+              <div className="flex justify-between text-base font-semibold py-4">
                 <p>Total</p>
                 <p>$235.00</p>
               </div>
@@ -120,7 +108,7 @@ const Bag: NextPage = () => {
                 </a>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

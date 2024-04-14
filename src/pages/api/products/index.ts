@@ -1,6 +1,7 @@
 import { ProductAdapted } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils/products";
+import { getProductsQuery } from "@/utils/getProductsQuery";
 
 interface HandlerType {
   error?: string;
@@ -13,72 +14,27 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<HandlerType>
 ) {
-  const { gender, sort, search, page = 1, pageSize = 12 } = req.query;
-
-  console.log("oi");
   try {
-    const pageIndex: number = Number(page);
-    const size: number = Number(pageSize);
-    const skip = (pageIndex - 1) * size;
+    const { pageSize = 12 } = req.query;
+    const size = Number(pageSize);
+    const { genderQuery, sortQuery, searchQuery, paginationQuery } =
+      getProductsQuery(req.query);
+    console.log("oi");
 
     const products = await prisma.product.findMany({
       include: {
         styleImages: true,
       },
       where: {
-        AND: [
-          gender
-            ? {
-                gender: {
-                  equals: (gender as string).toLowerCase(),
-                  mode: "insensitive",
-                },
-              }
-            : {},
-          search
-            ? {
-                OR: [
-                  {
-                    productDisplayName: {
-                      contains: (search as string).toLowerCase(),
-                      mode: "insensitive",
-                    },
-                  },
-                  {
-                    variantName: {
-                      contains: (search as string).toLowerCase(),
-                      mode: "insensitive",
-                    },
-                  },
-                ],
-              }
-            : {},
-        ],
+        AND: [genderQuery, searchQuery],
       },
-      orderBy:
-        sort === "recommended"
-          ? { id: "asc" }
-          : sort === "low-to-high"
-          ? { price: "asc" }
-          : sort === "high-to-low"
-          ? { price: "desc" }
-          : { id: "asc" },
-      skip,
-      take: size,
+      orderBy: sortQuery,
+      ...paginationQuery,
     });
 
     const totalProducts = await prisma.product.count({
       where: {
-        AND: [
-          gender
-            ? {
-                gender: {
-                  equals: (gender as string).toLowerCase(),
-                  mode: "insensitive",
-                },
-              }
-            : {},
-        ],
+        AND: [genderQuery, searchQuery],
       },
     });
 

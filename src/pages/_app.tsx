@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 
 function App({ Component, pageProps }: AppProps) {
   const [isHydrated, setIsHydrated] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     setIsHydrated(true);
@@ -18,7 +17,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Layout {...pageProps}>
-        <main className="px-4 md:px-24 lg:px-24 min-h-screen">
+        <main className="w-auto mx-6 xl:max-w-[76rem] xl:mx-auto min-h-screen">
           <Component {...pageProps} />
         </main>
       </Layout>

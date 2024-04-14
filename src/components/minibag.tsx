@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -8,15 +9,25 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./ui/navigation-menu";
+import { Button, buttonVariants } from "./ui/button";
+import useSWR from "swr";
+import { fetcher } from "@/utils/fetcher";
+import { ProductAdapted } from "@/models";
 
 export const MiniBag = () => {
+  const { data, isLoading } = useSWR("/api/bag", fetcher);
+  const bagItems = data?.bagItems || [];
+
   return (
     <>
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent" hideArrows>
-              <Link href="/bag" className="flex">
+            <NavigationMenuTrigger hideArrows className="p-0">
+              <Link
+                href="/bag"
+                className={buttonVariants({ variant: "ghost" })}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -80,76 +91,63 @@ export const MiniBag = () => {
                                   role="list"
                                   className="-my-6 divide-y divide-gray-200"
                                 >
-                                  <li className="flex py-6">
-                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                      <img
-                                        src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg"
-                                        alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
-                                        className="h-full w-full object-cover object-center"
-                                      />
-                                    </div>
-
-                                    <div className="ml-4 flex flex-1 flex-col">
-                                      <div>
-                                        <div className="flex justify-between text-base font-medium text-gray-900">
-                                          <h3>
-                                            <a href="#">Throwback Hip Bag</a>
-                                          </h3>
-                                          <p className="ml-4">$90.00</p>
-                                        </div>
-                                        <p className="mt-1 text-sm text-gray-500">
-                                          Salmon
-                                        </p>
-                                      </div>
-                                      <div className="flex flex-1 items-end justify-between text-sm">
-                                        <p className="text-gray-500">Qty 1</p>
-
-                                        <div className="flex">
-                                          <button
-                                            type="button"
-                                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                                  {bagItems.map(
+                                    (
+                                      bagItem: ProductAdapted,
+                                      index: number
+                                    ) => (
+                                      <li key={index} className="flex py-6">
+                                        <div className="w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                          <Link
+                                            href={`/product/${bagItem.productId}`}
                                           >
-                                            Remove
-                                          </button>
+                                            <Image
+                                              src={bagItem.styleImages.default}
+                                              alt={bagItem.productDisplayName}
+                                              className="h-full w-full object-cover object-top"
+                                              width={0}
+                                              height={0}
+                                              sizes="100vw"
+                                            />
+                                          </Link>
                                         </div>
-                                      </div>
-                                    </div>
-                                  </li>
-                                  <li className="flex py-6">
-                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                      <img
-                                        src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                                        alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
-                                        className="h-full w-full object-cover object-center"
-                                      />
-                                    </div>
 
-                                    <div className="ml-4 flex flex-1 flex-col">
-                                      <div>
-                                        <div className="flex justify-between text-base font-medium text-gray-900">
-                                          <h3>
-                                            <a href="#">Medium Stuff Satchel</a>
-                                          </h3>
-                                          <p className="ml-4">$32.00</p>
-                                        </div>
-                                        <p className="mt-1 text-sm text-gray-500">
-                                          Blue
-                                        </p>
-                                      </div>
-                                      <div className="flex flex-1 items-end justify-between text-sm">
-                                        <p className="text-gray-500">Qty 1</p>
+                                        <div className="ml-4 flex flex-1 flex-col">
+                                          <div>
+                                            <div className="flex justify-between text-base font-medium text-gray-900">
+                                              <h3>
+                                                <a href="#">
+                                                  <a href="#">
+                                                    {bagItem.productDisplayName}
+                                                  </a>
+                                                </a>
+                                              </h3>
+                                              <p className="ml-4">
+                                                ${bagItem.price}
+                                              </p>
+                                            </div>
+                                            <p className="mt-1 text-sm text-gray-500">
+                                              {bagItem.baseColour}
+                                            </p>
+                                          </div>
+                                          <div className="flex flex-1 items-end justify-between text-sm">
+                                            <p className="text-gray-500">
+                                              Qty 1
+                                            </p>
 
-                                        <div className="flex">
-                                          <button
-                                            type="button"
-                                            className="font-medium text-indigo-600 hover:text-indigo-500"
-                                          >
-                                            Remove
-                                          </button>
+                                            <div className="flex">
+                                              <Button
+                                                variant="ghost"
+                                                className="font-medium p-0 hover:bg-transparent hover:text-indigo-600"
+                                              >
+                                                Remove
+                                              </Button>
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                  </li>
+                                      </li>
+                                    )
+                                  )}
                                 </ul>
                               </div>
                             </div>
@@ -157,31 +155,30 @@ export const MiniBag = () => {
 
                           <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                             <div className="flex justify-between text-base font-medium text-gray-900">
-                              <p>Subtotal</p>
+                              <p>Total</p>
                               <p>$262.00</p>
                             </div>
                             <p className="mt-0.5 text-sm text-gray-500">
                               Shipping and taxes calculated at checkout.
                             </p>
-                            <div className="mt-6">
-                              <a
-                                href="#"
-                                className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                            <div className="mt-6 w-full flex justify-center gap-4">
+                              <Button
+                                asChild
+                                variant="outline"
+                                className="w-1/2 text-center text-base font-medium"
                               >
-                                Checkout
-                              </a>
-                            </div>
-                            <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-                              <p>
-                                or
-                                <button
-                                  type="button"
-                                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                                >
-                                  Continue Shopping
-                                  <span aria-hidden="true"> &rarr;</span>
-                                </button>
-                              </p>
+                                <Link className="py-6" href="/bag">
+                                  Bag
+                                </Link>
+                              </Button>
+                              <Button
+                                asChild
+                                className="w-1/2 text-center text-base font-medium"
+                              >
+                                <Link className="py-6" href="/bag">
+                                  Checkout
+                                </Link>
+                              </Button>
                             </div>
                           </div>
                         </div>

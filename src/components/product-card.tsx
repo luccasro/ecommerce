@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Skeleton } from "./ui/skeleton";
 import { useState } from "react";
-import { Product, StyleImages } from "@prisma/client";
 import { ProductAdapted } from "@/models";
 
 type ProductCardProps = {

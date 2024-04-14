@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
+import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Popover,
   PopoverContent,
@@ -7,11 +7,10 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 
 export const Search = () => {
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState(router.query.search || "");
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
 
   const searchIcon = (
     <svg
@@ -33,16 +32,20 @@ export const Search = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    router.push({
-      pathname: "/shopping",
-      query: { search: searchQuery },
-    });
+    const formData = new FormData(event.currentTarget);
+    const searchQuery = formData.get("search") as string;
+
+    if (!searchParams || !searchQuery.length) return;
+
+    const params = new URLSearchParams(searchParams);
+    params.set("search", searchQuery);
+    replace(`/shopping?${params.toString()}`);
   };
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">{searchIcon}</Button>
+        <Button variant="ghost">{searchIcon}</Button>
       </PopoverTrigger>
       <PopoverContent className="w-full min-w-96">
         <form className="max-w-lg mx-auto" onSubmit={handleSubmit}>
@@ -50,12 +53,10 @@ export const Search = () => {
             <div className="relative w-full">
               <Input
                 type="search"
-                id="search-dropdown"
+                name="search"
+                defaultValue={searchParams?.get("search") || ""}
                 className="block p-2.5 w-full z-20"
-                placeholder="Search...  "
-                required
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search..."
               />
               <button
                 type="submit"

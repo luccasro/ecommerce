@@ -18,6 +18,7 @@ export default async function handler(
       include: {
         styleImages: true,
         productDescriptors: true,
+        styleOptions: true,
       },
     })) as ProductAdapted;
 

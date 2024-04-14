@@ -132,8 +132,8 @@ model StyleOption {
   inventoryCount            Int?
   available                 Boolean
   active                    Boolean
-  skuAvailabilityDetailMap  Json?
-  warehouseIdToItemCountMap Json?
+  // skuAvailabilityDetailMap  Json?
+  // warehouseIdToItemCountMap Json?
   Product                   Product? @relation(fields: [productId], references: [id])
   productId                 Int?
 }
