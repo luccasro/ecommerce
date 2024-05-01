@@ -7,46 +7,87 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+  model User {
+    id        String   @id @default(cuid())
+    name      String?
+    email     String?  @unique
+    password  String?
+    createdAt DateTime @default(now())
+    bag       Bag?     @relation(fields: [bagId], references: [id])
+    bagId     String?  @unique
+  }
+
+  model Bag {
+    id        String    @id @default(cuid())
+    userId    String    @unique
+    User      User[]
+    items     BagItem[]
+    summary   Summary?  @relation(fields: [summaryId], references: [id])
+    summaryId Int?      @unique
+  }
+
+  model BagItem {
+    id        Int     @id @default(autoincrement())
+    quantity  Int
+    size      String
+    createdAt DateTime @default(now())
+    bagId     String
+    bag       Bag     @relation(fields: [bagId], references: [id])
+    productId Int     
+    product   Product @relation(fields: [productId], references: [productId])
+  }
+
+model Summary {
+  id          Int     @id @default(autoincrement())
+  subtotal    String?
+  shippingFee String?
+  total       String?
+  taxes       String?
+  discount    String?
+  bagId       String @unique
+  bag         Bag[]
+}
+
 model Product {
-  id                   Int                @id @default(autoincrement())
-  productId            Int                @unique
+  id                   Int                 @id @default(autoincrement())
+  productId            Int                 @unique
   price                Float
   discountedPrice      Float
   styleType            String
   productTypeId        Int
-  articleNumber        String
+  articleNumber        String?
   visualTag            String?
   productDisplayName   String
   variantName          String
-  myntraRating         Float
+  myntraRating         Float?
   catalogAddDate       Int
   brandName            String
-  ageGroup             String
+  ageGroup             String?
   gender               String
   baseColour           String
   colour1              String?
   colour2              String?
-  fashionType          String
-  season               String
-  year                 String
-  usage                String
-  vat                  Float
+  fashionType          String?
+  season               String?
+  year                 String?
+  usage                String?
+  vat                  Float?
   displayCategories    String?
-  weight               String
-  navigationId         Int
+  weight               String?
+  navigationId         Int?
   landingPageUrl       String
-  codEnabled           Boolean
-  isEMIEnabled         Boolean
-  masterCategory       MasterCategory?    @relation(fields: [masterCategoryId], references: [id])
+  codEnabled           Boolean?
+  isEMIEnabled         Boolean?
+  masterCategory       MasterCategory?     @relation(fields: [masterCategoryId], references: [id])
   subCategory          SubCategory?        @relation(fields: [subCategoryId], references: [id])
   // articleType          ArticleType        @relation(fields: [articleTypeId], references: [id])
   productDescriptors   ProductDescriptors? @relation(fields: [productDescriptorsId], references: [id])
   // otherFlags           OtherFlag[]
-  styleOptions         StyleOption[]
+  sizes                Size[]
   // articleAttributes    ArticleAttributes  @relation(fields: [articleAttributesId], references: [id])
   // brandUserProfile     BrandUserProfile   @relation(fields: [brandUserProfileUidx], references: [uidx])
   // crossLinks           CrossLink[]
-  styleImages          StyleImages        @relation(fields: [styleImagesId], references: [id])
+  styleImages          StyleImages         @relation(fields: [styleImagesId], references: [id])
   masterCategoryId     Int?
   subCategoryId        Int?
   // articleTypeId        Int
@@ -54,8 +95,9 @@ model Product {
   // articleAttributesId  Int
   // brandUserProfileUidx String
   styleImagesId        Int
-  discountData         DiscountData?      @relation(fields: [discountDataId], references: [id])
+  discountData         DiscountData?       @relation(fields: [discountDataId], references: [id])
   discountDataId       Int?
+  BagItem              BagItem[]
 }
 
 model MasterCategory {
@@ -119,23 +161,23 @@ model ProductDescriptors {
 //   productId Int?
 // }
 
-model StyleOption {
-  id                        Int      @id @default(autoincrement())
-  uid                       Int
-  name                      String
-  value                     String
-  unifiedSize               String?
-  unifiedSizeValue          String?
-  unifiedSizeScale          String?
-  allSize                   String?
-  skuId                     Int?
-  inventoryCount            Int?
-  available                 Boolean
-  active                    Boolean
+model Size {
+  id               Int      @id @default(autoincrement())
+  uid              Int
+  name             String
+  value            String
+  unifiedSize      String?
+  unifiedSizeValue String?
+  unifiedSizeScale String?
+  allSize          String?
+  skuId            Int?
+  inventoryCount   Int?
+  available        Boolean
+  active           Boolean
   // skuAvailabilityDetailMap  Json?
   // warehouseIdToItemCountMap Json?
-  Product                   Product? @relation(fields: [productId], references: [id])
-  productId                 Int?
+  Product          Product? @relation(fields: [productId], references: [id])
+  productId        Int?
 }
 
 // model ArticleAttributes {

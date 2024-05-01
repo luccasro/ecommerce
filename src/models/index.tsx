@@ -4,8 +4,11 @@ import {
   ProductDescriptors,
   MasterCategory,
   SubCategory,
-  StyleOption,
+  Size,
   DiscountData,
+  Bag,
+  BagItem,
+  Summary,
 } from "@prisma/client";
 
 export interface ProductAdapted extends Product {
@@ -13,6 +16,15 @@ export interface ProductAdapted extends Product {
   productDescriptors?: ProductDescriptors;
   masterCategory?: MasterCategory;
   subCategory?: SubCategory;
-  styleOptions?: StyleOption[];
+  sizes?: Size[];
   discountData?: DiscountData;
+}
+
+export interface BagItemAdapted extends BagItem {
+  product: ProductAdapted;
+}
+
+export interface BagAdapted extends Bag {
+  items: BagItemAdapted[];
+  summary: Summary;
 }

@@ -7,10 +7,15 @@ interface BuildUrlOptions {
   path: string;
 }
 export function buildUrlApi({ query, path, isQueryPath }: BuildUrlOptions) {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  if (!query && !isQueryPath) {
+    return `${API_URL}${path}`;
+  }
+
   const params = queryString.stringify({ ...query });
   const queryValue = Object.values(query as {})[0];
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const queryPath = isQueryPath && queryValue ? `/${queryValue}` : `?${params}`;
-  const url = `${API_URL}${path}${queryPath}`;
-  return url;
+
+  return `${API_URL}${path}${queryPath}`;
 }

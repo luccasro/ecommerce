@@ -4,7 +4,8 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* --background: 0 0% 100%; */
+    --background: 200 14% 96%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -72,6 +73,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+    height: 100%;
   }
 }
 

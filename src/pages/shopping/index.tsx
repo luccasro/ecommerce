@@ -1,5 +1,4 @@
-"use client";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/listing/product-card";
 import { Button } from "@/components/ui/button";
 import { buildUrlApi } from "@/utils/buildUrlApi";
 import { NextPage } from "next";
@@ -7,9 +6,9 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import useSWR from "swr";
 import Breadcrumbs from "@/components/breadcrumbs";
-import { Sort } from "@/components/sort";
-import { ListingSkeleton } from "@/components/listing-skeleton";
-import { Pagination } from "@/components/pagination";
+import { Sort } from "@/components/listing/sort";
+import { ListingSkeleton } from "@/components/listing/listing-skeleton";
+import { Pagination } from "@/components/listing/pagination";
 import { fetcher } from "@/utils/fetcher";
 
 const ListingPage: NextPage = () => {
@@ -60,26 +59,22 @@ const ListingPage: NextPage = () => {
         </div>
       )}
       <div className="flex justify-end items-center my-4">
-        {!isLoading && !!products.length && (
-          <>
-            <Button
-              className=" mr-4 hidden lg:inline-block"
-              onClick={toggleColumns}
-            >
-              {columns === 3 ? "Show 4 columns" : "Show 3 columns"}
-            </Button>
-            <Sort />
-          </>
-        )}
+        <>
+          <Button
+            className=" mr-4 hidden lg:inline-block"
+            onClick={toggleColumns}
+          >
+            {columns === 3 ? "Show 4 columns" : "Show 3 columns"}
+          </Button>
+          <Sort />
+        </>
       </div>
-
       <ul
         className={`grid grid-cols-2 lg:grid-cols-${columns} gap-4 justify-center mb-4`}
       >
         {isLoading ? (
           <ListingSkeleton />
         ) : (
-          !!products.length &&
           products.map((product: any) => (
             <li key={product.id}>
               <ProductCard product={product} />

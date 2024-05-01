@@ -28,6 +28,10 @@ async function main() {
       otherFlags,
       articleDisplayAttr,
       colours,
+      styleOptions,
+      isEMIEnabled,
+      visualTag,
+      myntraRating,
       ...rest
     } = product;
 
@@ -60,14 +64,18 @@ async function main() {
           ...product.productDescriptors.description,
         },
       },
-      discountData: {
-        create: {
-          ...(product?.discountData || {}),
-          discountText: undefined,
-          discountToolTipText: undefined,
-        },
-      },
-      styleOptions: {
+      ...(product?.discountData
+        ? {
+            discountData: {
+              create: {
+                ...product.discountData,
+                discountText: undefined,
+                discountToolTipText: undefined,
+              },
+            },
+          }
+        : {}),
+      sizes: {
         create: product.styleOptions.map((option: any) => {
           const {
             id,
@@ -84,22 +92,14 @@ async function main() {
   });
 
   try {
-    // const allProducts = await prisma.product.findMany({
-    //   include: {
-    //     styleImages: true,
-    //   },
-    // });
-
     await Promise.all(
       products.map(async (product: any, i: number) => {
-        // if (!allProducts.find((p) => p.productId === product.productId)) {
         console.log("Adding new product at index", i);
         await prisma.product.upsert({
           where: { productId: product.productId },
           update: {},
           create: product,
         });
-        // }
       })
     );
   } catch (error) {

@@ -1,6 +1,6 @@
 import { ProductAdapted } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/utils/products";
+import { prisma } from "@/utils";
 
 interface HandlerType {
   error?: string;
@@ -18,7 +18,7 @@ export default async function handler(
       include: {
         styleImages: true,
         productDescriptors: true,
-        styleOptions: true,
+        sizes: true,
       },
     })) as ProductAdapted;
 

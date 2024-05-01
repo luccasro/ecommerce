@@ -10,6 +10,7 @@ const config = {
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
+  safelist: ["lg:grid-cols-3", "lg:grid-cols-4"],
   theme: {
     container: {
       center: true,

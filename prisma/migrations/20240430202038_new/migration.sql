@@ -1,4 +1,50 @@
 -- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "email" TEXT,
+    "password" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "bagId" TEXT,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Bag" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "summaryId" INTEGER,
+
+    CONSTRAINT "Bag_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BagItem" (
+    "id" SERIAL NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "size" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "bagId" TEXT NOT NULL,
+    "productId" INTEGER NOT NULL,
+
+    CONSTRAINT "BagItem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Summary" (
+    "id" SERIAL NOT NULL,
+    "subtotal" TEXT,
+    "shippingFee" TEXT,
+    "total" TEXT,
+    "taxes" TEXT,
+    "discount" TEXT,
+    "bagId" TEXT NOT NULL,
+
+    CONSTRAINT "Summary_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Product" (
     "id" SERIAL NOT NULL,
     "productId" INTEGER NOT NULL,
@@ -6,29 +52,29 @@ CREATE TABLE "Product" (
     "discountedPrice" DOUBLE PRECISION NOT NULL,
     "styleType" TEXT NOT NULL,
     "productTypeId" INTEGER NOT NULL,
-    "articleNumber" TEXT NOT NULL,
+    "articleNumber" TEXT,
     "visualTag" TEXT,
     "productDisplayName" TEXT NOT NULL,
     "variantName" TEXT NOT NULL,
-    "myntraRating" DOUBLE PRECISION NOT NULL,
+    "myntraRating" DOUBLE PRECISION,
     "catalogAddDate" INTEGER NOT NULL,
     "brandName" TEXT NOT NULL,
-    "ageGroup" TEXT NOT NULL,
+    "ageGroup" TEXT,
     "gender" TEXT NOT NULL,
     "baseColour" TEXT NOT NULL,
     "colour1" TEXT,
     "colour2" TEXT,
-    "fashionType" TEXT NOT NULL,
-    "season" TEXT NOT NULL,
-    "year" TEXT NOT NULL,
-    "usage" TEXT NOT NULL,
-    "vat" DOUBLE PRECISION NOT NULL,
+    "fashionType" TEXT,
+    "season" TEXT,
+    "year" TEXT,
+    "usage" TEXT,
+    "vat" DOUBLE PRECISION,
     "displayCategories" TEXT,
-    "weight" TEXT NOT NULL,
-    "navigationId" INTEGER NOT NULL,
+    "weight" TEXT,
+    "navigationId" INTEGER,
     "landingPageUrl" TEXT NOT NULL,
-    "codEnabled" BOOLEAN NOT NULL,
-    "isEMIEnabled" BOOLEAN NOT NULL,
+    "codEnabled" BOOLEAN,
+    "isEMIEnabled" BOOLEAN,
     "masterCategoryId" INTEGER,
     "subCategoryId" INTEGER,
     "productDescriptorsId" INTEGER,
@@ -78,7 +124,7 @@ CREATE TABLE "ProductDescriptors" (
 );
 
 -- CreateTable
-CREATE TABLE "StyleOption" (
+CREATE TABLE "Size" (
     "id" SERIAL NOT NULL,
     "uid" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
@@ -91,11 +137,9 @@ CREATE TABLE "StyleOption" (
     "inventoryCount" INTEGER,
     "available" BOOLEAN NOT NULL,
     "active" BOOLEAN NOT NULL,
-    "skuAvailabilityDetailMap" JSONB,
-    "warehouseIdToItemCountMap" JSONB,
     "productId" INTEGER,
 
-    CONSTRAINT "StyleOption_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Size_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -120,7 +164,7 @@ CREATE TABLE "DiscountData" (
     "discountId" INTEGER,
     "discountRuleId" INTEGER,
     "discountPercent" INTEGER,
-    "discountModifiedDate" INTEGER,
+    "discountModifiedDate" BIGINT,
     "discountText" JSONB,
     "discountToolTipText" JSONB,
 
@@ -128,7 +172,34 @@ CREATE TABLE "DiscountData" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_bagId_key" ON "User"("bagId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Bag_userId_key" ON "Bag"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Bag_summaryId_key" ON "Bag"("summaryId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Summary_bagId_key" ON "Summary"("bagId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Product_productId_key" ON "Product"("productId");
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_bagId_fkey" FOREIGN KEY ("bagId") REFERENCES "Bag"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Bag" ADD CONSTRAINT "Bag_summaryId_fkey" FOREIGN KEY ("summaryId") REFERENCES "Summary"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BagItem" ADD CONSTRAINT "BagItem_bagId_fkey" FOREIGN KEY ("bagId") REFERENCES "Bag"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BagItem" ADD CONSTRAINT "BagItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("productId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_masterCategoryId_fkey" FOREIGN KEY ("masterCategoryId") REFERENCES "MasterCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -146,4 +217,4 @@ ALTER TABLE "Product" ADD CONSTRAINT "Product_styleImagesId_fkey" FOREIGN KEY ("
 ALTER TABLE "Product" ADD CONSTRAINT "Product_discountDataId_fkey" FOREIGN KEY ("discountDataId") REFERENCES "DiscountData"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StyleOption" ADD CONSTRAINT "StyleOption_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Size" ADD CONSTRAINT "Size_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;

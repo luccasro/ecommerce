@@ -1,11 +1,11 @@
-import { ProductAdapted } from "@/models";
+import { BagAdapted, ProductAdapted } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/utils/products";
-import { getProductsQuery } from "@/utils/getProductsQuery";
+import { prisma } from "@/utils";
+import { getCurrentSession } from "@/utils/server/session/getCurrentSession";
 
 interface HandlerType {
   error?: string;
-  bagItems?: ProductAdapted[];
+  bag?: BagAdapted;
 }
 
 export default async function handler(
@@ -13,29 +13,37 @@ export default async function handler(
   res: NextApiResponse<HandlerType>
 ) {
   try {
-    const bagItems = await prisma.product.findMany({
+    const session = await getCurrentSession(req, res);
+
+    const user = session?.user as any;
+
+    if (!session || !user || !user.id)
+      return res.status(401).json({ error: "Unauthorized" });
+
+    const bag = await prisma.bag.findFirst({
+      where: { userId: user.id },
       include: {
-        styleImages: true,
-      },
-      where: {
-        AND: [
-          {
-            gender: {
-              equals: "Men",
-              mode: "insensitive",
+        items: {
+          orderBy: { createdAt: "asc" },
+          include: {
+            product: {
+              include: {
+                styleImages: true,
+                sizes: true,
+              },
             },
           },
-        ],
+        },
+        summary: true,
       },
-      take: 3,
     });
 
-    if (!bagItems.length) {
-      return res.status(404).json({ error: "Products not found" });
+    if (!bag?.items?.length) {
+      return res.status(200).json({ error: "Products not found" });
     }
 
     res.status(200).json({
-      bagItems,
+      bag: bag as BagAdapted,
     });
   } catch (error) {
     console.error(error);

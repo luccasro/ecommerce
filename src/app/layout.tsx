@@ -6,6 +6,7 @@ import Providers from "./providers";
 import { Footer } from "@/components/footer";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { Toaster } from "@/components/ui/toaster";
 
 export const fontSans = Inter({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
+          <Toaster />
           <Footer />
         </Providers>
       </body>

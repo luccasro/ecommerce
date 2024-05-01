@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { headerLinks } from "@/utils/headerLinks";
-import { MiniBag } from "./minibag";
+import { MiniBag } from "../bag/minibag";
 import { Search } from "./search";
 
 import {
@@ -12,13 +12,19 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTrigger,
-} from "./ui/drawer";
+} from "../ui/drawer";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { WishlistIcon } from "./icons/wishlist";
+import { WishlistIcon } from "../icons/wishlist";
+import { HamburguerMenuIcon } from "../icons/hamburguer-menu";
+import { CloseIcon } from "../icons/close";
+import { AccountMenu } from "./account-menu";
 
 const WishlistButton: React.FC = () => (
-  <Link href="/wishlist" className={buttonVariants({ variant: "ghost" })}>
+  <Link
+    href="/wishlist"
+    className={buttonVariants({ variant: "ghost", size: "icon" })}
+  >
     <WishlistIcon />
   </Link>
 );
@@ -26,40 +32,19 @@ const WishlistButton: React.FC = () => (
 export const MobileHeader: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleOpen = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
     <div className="">
       <Drawer open={isOpen} direction="left">
-        <DrawerTrigger onClick={() => setIsOpen((prev) => !prev)}>
+        <DrawerTrigger onClick={handleOpen}>
           <Button
             variant="ghost"
             className="inline-flex items-center lg:hidden hover:bg-transparent p-0"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <g clip-path="url(#clip0_429_11066)">
-                <path
-                  d="M3 6.00092H21M3 12.0009H21M3 18.0009H21"
-                  stroke="#292929"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_429_11066">
-                  <rect
-                    width="24"
-                    height="24"
-                    fill="white"
-                    transform="translate(0 0.000915527)"
-                  />
-                </clipPath>
-              </defs>
-            </svg>
+            <HamburguerMenuIcon />
           </Button>
         </DrawerTrigger>
         <DrawerContent className="rounded-none h-full">
@@ -68,21 +53,9 @@ export const MobileHeader: React.FC = () => {
             <Button
               className="absolute top-0 right-0 mt-7 mr-3 p-0 h-0 hover:bg-transparent"
               variant="ghost"
-              onClick={() => setIsOpen(false)}
+              onClick={handleOpen}
             >
-              <svg
-                className="w-6 h-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z"
-                  fill="black"
-                />
-              </svg>
+              <CloseIcon />
             </Button>
           </DrawerHeader>
 
@@ -127,8 +100,9 @@ export const Header = () => {
         </div>
         <div className="ml-auto flex gap-2">
           <Search />
-          <MiniBag />
+          <AccountMenu />
           <WishlistButton />
+          <MiniBag />
           <div className="hidden lg:block">
             <ThemeToggle />
           </div>

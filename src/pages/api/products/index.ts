@@ -1,6 +1,6 @@
 import { ProductAdapted } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/utils/products";
+import { prisma } from "@/utils";
 import { getProductsQuery } from "@/utils/getProductsQuery";
 
 interface HandlerType {
