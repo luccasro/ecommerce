@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { BagItemAdapted } from "@/models";
 import { CloseIcon } from "@/components/icons/close";
 import { SizeQuantity } from "@/components/bag/size-quantity";
+import { Price } from "../shared/price";
 
 interface BagItemProps {
   bagItem: BagItemAdapted;
@@ -25,7 +26,6 @@ export const BagItem: React.FC<BagItemProps> = ({
   onChange,
 }) => {
   const { product, id: bagItemId, size, quantity } = bagItem;
-  const haveDiscount = product.discountedPrice !== product.price;
 
   const handleOnChange = (size: string, quantity: number) => {
     onChange?.(bagItemId, product.productId, size, quantity);
@@ -57,18 +57,10 @@ export const BagItem: React.FC<BagItemProps> = ({
               <div className="mt-1 flex justify-between md:block">
                 <p className="text-sm text-gray-500">{product.baseColour}</p>
                 <p className="block md:hidden">
-                  {haveDiscount && (
-                    <span className="text-red-500">
-                      {product.discountedPrice} €
-                    </span>
-                  )}{" "}
-                  <span
-                    className={`${
-                      haveDiscount ? "text-gray-500 line-through" : undefined
-                    }`}
-                  >
-                    {product.price} €
-                  </span>
+                  <Price
+                    price={product.price}
+                    discountedPrice={product?.discountedPrice}
+                  />
                 </p>
               </div>
               <SizeQuantity
@@ -92,16 +84,10 @@ export const BagItem: React.FC<BagItemProps> = ({
         </div>
         <div className="w-1/6 items-center hidden md:flex">
           <p>
-            {haveDiscount && (
-              <span className="text-red-500">{product.discountedPrice} €</span>
-            )}{" "}
-            <span
-              className={`${
-                haveDiscount ? "text-gray-500 line-through" : undefined
-              }`}
-            >
-              {product.price} €
-            </span>
+            <Price
+              price={product.price}
+              discountedPrice={product?.discountedPrice}
+            />
           </p>
         </div>
         <SizeQuantity

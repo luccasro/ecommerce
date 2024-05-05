@@ -34,6 +34,11 @@ export const getProductsQuery = (
               mode: "insensitive",
             },
           },
+          {
+            productId: {
+              equals: parseInt(search as string) || 0,
+            },
+          },
         ],
       }
     : {};
@@ -42,9 +47,9 @@ export const getProductsQuery = (
     sort === "recommended"
       ? { id: "asc" }
       : sort === "low-to-high"
-      ? { price: "asc" }
+      ? { discountedPrice: "asc" }
       : sort === "high-to-low"
-      ? { price: "desc" }
+      ? { discountedPrice: "desc" }
       : { id: "asc" };
 
   return { genderQuery, searchQuery, sortQuery, paginationQuery };

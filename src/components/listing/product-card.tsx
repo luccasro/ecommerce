@@ -2,25 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { ProductAdapted } from "@/models";
+import { Price } from "../shared/price";
 
 type ProductCardProps = {
   product: ProductAdapted;
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setLoading] = useState(true);
 
   const handleImageLoad = () => {
     setLoading(false);
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
   };
 
   return (
@@ -33,11 +25,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <div
             className={`relative pb-[120%] ${
               isLoading && "animate-pulse"
-            } aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 ${
-              isHovered ? "transition-all delay-1000" : ""
-            }`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            } aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7`}
           >
             <Image
               src={product?.styleImages?.default}
@@ -46,7 +34,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               width={0}
               height={0}
               sizes="100vw"
-              className="absolute top-0 left-0 h-full w-full object-cover object-center group-hover:opacity-75"
+              className="absolute top-0 left-0 h-full w-full object-cover object-center transition-opacity opacity-100 hover:opacity-0"
             />
             <Image
               src={product?.styleImages?.right}
@@ -54,9 +42,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               width={0}
               height={0}
               sizes="100vw"
-              className={`absolute top-0 left-0 h-full w-full object-cover object-center transition-opacity duration-500 ${
-                isHovered ? "opacity-100" : "opacity-0"
-              }`}
+              className="absolute top-0 left-0 h-full w-full object-cover object-center transition-opacity duration-500 opacity-0 hover:opacity-100"
             />
           </div>
         </Link>
@@ -70,8 +56,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             {product.displayCategories}
           </h5>
           <div className="mt-1 flex items-center justify-between">
-            <p>
-              <span className="text-sm font-bold">{product.price} €</span>
+            <p className="text-sm font-bold">
+              <Price
+                price={product.price}
+                discountedPrice={product?.discountedPrice}
+              />
             </p>
           </div>
         </div>

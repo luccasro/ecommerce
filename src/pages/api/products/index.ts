@@ -19,7 +19,6 @@ export default async function handler(
     const size = Number(pageSize);
     const { genderQuery, sortQuery, searchQuery, paginationQuery } =
       getProductsQuery(req.query);
-    console.log("oi");
 
     const products = await prisma.product.findMany({
       include: {

@@ -1,7 +1,6 @@
 import { prisma } from "@/utils";
 import { DiscountData } from "@prisma/client";
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
+import { NextApiResponse } from "next";
 
 function calculateShippingFee(subtotal: number): number {
   // Free shipping for orders over $100

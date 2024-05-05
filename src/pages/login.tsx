@@ -15,11 +15,11 @@ const Login = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [isLogin, setIsLogin] = useState(true);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleSubmitRegister(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmitRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
 
     let userData = {
@@ -42,50 +42,57 @@ const Login = () => {
       path: "/api/user/create",
     });
 
-    const res = await fetch(apiUrl, {
-      method: "POST",
-      body: JSON.stringify(userData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      await fetch(apiUrl, {
+        method: "POST",
+        body: JSON.stringify(userData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    console.log(res);
-    if (res.ok) {
-      const data = await res.json();
-    } else {
-      return toast({
+      await login(userData.email as string, userData.password as string);
+    } catch (error) {
+      setIsSubmitting(false);
+      console.error("Failed", error);
+      toast({
         title: "Something went wrong!",
-        description: "There was a problem creating your account! Try again!",
+        description: "There was a problem creating your account!",
         variant: "destructive",
       });
     }
-  }
+  };
 
-  async function handleSubmitLogin(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmitLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
 
-    let res = await signIn("credentials", {
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
+    await login(
+      formData.get("email") as string,
+      formData.get("password") as string
+    );
+  };
+
+  const login = async (email: string, password: string) => {
+    const res = await signIn("credentials", {
+      email,
+      password,
       callbackUrl: `${process.env.NEXT_PUBLIC_API_URL}`,
       redirect: false,
     });
 
-    if (res?.ok) {
-      // router.push("/");
-      window.location.href = "/";
-    } else {
-      console.error("Failed", res?.error);
-      toast({
+    if (res?.error) {
+      setIsSubmitting(false);
+      return toast({
         title: "Something went wrong!",
         description: "There was a problem with your login.",
         variant: "destructive",
       });
     }
-  }
+    router.push("/");
+  };
 
   const loginForm = (
     <>
@@ -125,10 +132,10 @@ const Login = () => {
             required
           />
         </div>
-        <Button type="submit" className="w-full mb-4">
+        <Button type="submit" disabled={isSubmitting} className="w-full mb-4">
           Login
         </Button>
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" disabled={isSubmitting} className="w-full">
           Login with Google
         </Button>
       </form>
@@ -178,14 +185,14 @@ const Login = () => {
             required
           />
         </div>
-        <Button type="submit" className="w-full mb-4">
+        <Button type="submit" disabled={isSubmitting} className="w-full mb-4">
           Create account
         </Button>
       </form>
     </>
   );
 
-  console.log(session);
+  // console.log(session);
 
   return (
     <div className="w-full lg:flex items-center h-screen gap-24">
@@ -217,40 +224,6 @@ const Login = () => {
           )}
         </div>
       </div>
-
-      {/* <div className="lg:w-1/2 hidden bg-muted h-full lg:block">
-        <form
-          className="mx-auto flex flex-col justify-center h-full pb-4"
-          onSubmit={handleSubmit}
-        >
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-              className="mb-4"
-            />
-          </div>
-          <div>
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-            </div>
-            <Input
-              className="mb-4"
-              id="password"
-              name="password"
-              type="password"
-              required
-            />
-          </div>
-          <Button type="submit" className="w-full mb-4">
-            Register
-          </Button>
-        </form>
-      </div> */}
     </div>
   );
 };

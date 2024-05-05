@@ -19,12 +19,12 @@ const ListingPage: NextPage = () => {
     path: "/api/products",
     query,
   });
+  console.log(query);
+  // const gender = localStorage.getItem("gender");
 
-  const gender = localStorage.getItem("gender");
-
-  if (query.gender && gender !== query.gender) {
-    localStorage.setItem("gender", query.gender as string);
-  }
+  // if (query.gender && gender !== query.gender) {
+  //   localStorage.setItem("gender", query.gender as string);
+  // }
 
   const { data, error, isLoading } = useSWR(url, () => fetcher(url), {
     // revalidateOnMount: query.gender ? gender !== query.gender : true,

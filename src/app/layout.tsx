@@ -28,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <Head>
+        <title>E-commerce | Clothing</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <style

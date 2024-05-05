@@ -12,6 +12,7 @@ import { BagItem } from "@/components/bag/bag-item";
 
 const Bag: NextPage = () => {
   const { toast } = useToast();
+
   const { data, mutate, isLoading, isValidating } = useSWR(
     "/api/bag",
     fetcher,
@@ -25,11 +26,11 @@ const Bag: NextPage = () => {
 
   const removeItemFromBag = async (bagItemId: number, productId: number) => {
     try {
-      const url = buildUrlApi({
+      const apiUrl = buildUrlApi({
         path: "/api/bag/delete",
       });
 
-      const response = await fetch(url, {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,13 +56,6 @@ const Bag: NextPage = () => {
     }
   };
 
-  interface UpdateBagItemProps {
-    bagItemId: number;
-    productId: number;
-    size?: string;
-    quantity?: number;
-  }
-
   const updateBagItem = async (
     bagItemId: number,
     productId: number,
@@ -69,11 +63,11 @@ const Bag: NextPage = () => {
     quantity: number
   ) => {
     try {
-      const url = buildUrlApi({
+      const apiUrl = buildUrlApi({
         path: "/api/bag/update",
       });
 
-      const response = await fetch(url, {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -72,14 +72,7 @@ export const authOptions: AuthOptions = {
 
   callbacks: {
     async session(props) {
-      // console.log("xdd", props);
-
       const { session, user, token } = props;
-      // if (user) {
-      //   session.user = user;
-      // }
-      // console.log("bag", token.bag);
-      // console.log(session.user);
       if (token.bag) {
         session.user = {
           ...session.user,
