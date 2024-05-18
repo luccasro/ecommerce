@@ -5,7 +5,3 @@ export const headerLinks = [
   { name: "Clothing", href: "/shopping/clothing", key: "clothing" },
   { name: "Shoes", href: "/shopping/shoes", key: "shoes" },
 ];
-
-export const getHeaderLink = (key: string) => {
-  return headerLinks.find((link) => link.key === key);
-};

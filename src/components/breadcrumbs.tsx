@@ -6,16 +6,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getHeaderLink } from "@/utils/headerLinks";
+import { getBreadcrumb } from "@/utils/getBreadcrumb";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import { Fragment } from "react";
 
 const Breadcrumbs: React.FC = () => {
   const router = useRouter();
-  const currentQuery = getHeaderLink(router.query.gender as string);
+  const hasSlug = !!router.query.slug;
+  const queryPath = (router.query.slug as string[]) || [];
 
-  const breadcrumbPath = !currentQuery ? (
+  const breadcrumbPath = !hasSlug ? (
     <BreadcrumbItem>
       <BreadcrumbPage>Shopping</BreadcrumbPage>
     </BreadcrumbItem>
@@ -39,14 +40,21 @@ const Breadcrumbs: React.FC = () => {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         {breadcrumbPath}
-        {currentQuery && (
-          <>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{currentQuery?.name}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </>
-        )}
+        {hasSlug &&
+          queryPath.map((path, index) => {
+            const currentBreadcrumb = getBreadcrumb(path);
+            if (!currentBreadcrumb) return;
+            return (
+              <Fragment key={index}>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="capitalize">
+                    {currentBreadcrumb}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </Fragment>
+            );
+          })}
       </BreadcrumbList>
     </Breadcrumb>
   );

@@ -1,31 +1,49 @@
-import { ProductAdapted } from "@/models";
+import { FilterOptions, ProductAdapted } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
 import { getProductsQuery } from "@/utils/getProductsQuery";
-
+import { getFilterOptions } from "@/utils/server/listing/getFilterOptions";
 interface HandlerType {
   error?: string;
   products?: ProductAdapted[];
   totalProducts?: number;
   pages?: number;
+  filterOptions?: FilterOptions;
 }
+
+const DEFAULT_PAGE_SIZE = 12;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<HandlerType>
 ) {
   try {
-    const { pageSize = 12 } = req.query;
+    const { pageSize = DEFAULT_PAGE_SIZE } = req.query;
     const size = Number(pageSize);
-    const { genderQuery, sortQuery, searchQuery, paginationQuery } =
-      getProductsQuery(req.query);
+    const {
+      pathQuery,
+      sortQuery,
+      searchQuery,
+      priceQuery,
+      brandsQuery,
+      paginationQuery,
+      sizesQuery,
+    } = getProductsQuery(req.query);
+
+    const allQueries = [
+      pathQuery,
+      priceQuery,
+      brandsQuery,
+      searchQuery,
+      sizesQuery,
+    ];
 
     const products = await prisma.product.findMany({
       include: {
         styleImages: true,
       },
       where: {
-        AND: [genderQuery, searchQuery],
+        AND: allQueries,
       },
       orderBy: sortQuery,
       ...paginationQuery,
@@ -33,8 +51,13 @@ export default async function handler(
 
     const totalProducts = await prisma.product.count({
       where: {
-        AND: [genderQuery, searchQuery],
+        AND: allQueries,
       },
+    });
+
+    const filterOptions = await getFilterOptions({
+      pathQuery,
+      searchQuery,
     });
 
     if (!totalProducts || !products.length) {
@@ -45,6 +68,7 @@ export default async function handler(
       products,
       totalProducts,
       pages: Math.ceil(totalProducts / size),
+      filterOptions,
     });
   } catch (error) {
     console.error(error);

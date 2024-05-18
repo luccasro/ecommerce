@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BagItemAdapted } from "@/models";
-import { CloseIcon } from "@/components/icons/close";
 import { SizeQuantity } from "@/components/bag/size-quantity";
 import { Price } from "../shared/price";
+import { X } from "lucide-react";
 
 interface BagItemProps {
   bagItem: BagItemAdapted;
@@ -98,16 +98,14 @@ export const BagItem: React.FC<BagItemProps> = ({
           disabled={disabled}
           onChange={handleOnChange}
         />
-        <div className="absolute top-0 right-0">
-          <Button
-            variant="ghost"
-            className="p-0 hover:bg-transparent"
-            disabled={disabled}
-            onClick={() => onRemove?.(bagItemId, product.productId)}
-          >
-            <CloseIcon className="w-4 h-4 fill-black dark:fill-white" />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent absolute top-[-15px] right-0"
+          disabled={disabled}
+          onClick={() => onRemove?.(bagItemId, product.productId)}
+        >
+          <X className="w-4 h-4 fill-black dark:fill-white" />
+        </Button>
       </li>
       <Separator className="mb-6" />
     </>

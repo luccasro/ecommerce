@@ -6,6 +6,7 @@ CREATE TABLE "User" (
     "password" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "bagId" TEXT,
+    "wishlistId" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -29,6 +30,26 @@ CREATE TABLE "BagItem" (
     "productId" INTEGER NOT NULL,
 
     CONSTRAINT "BagItem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Wishlist" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "Wishlist_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WishlistItem" (
+    "id" SERIAL NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "size" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "wishlistId" TEXT NOT NULL,
+    "productId" INTEGER NOT NULL,
+
+    CONSTRAINT "WishlistItem_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -178,10 +199,16 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "User_bagId_key" ON "User"("bagId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_wishlistId_key" ON "User"("wishlistId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Bag_userId_key" ON "Bag"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Bag_summaryId_key" ON "Bag"("summaryId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Wishlist_userId_key" ON "Wishlist"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Summary_bagId_key" ON "Summary"("bagId");
@@ -193,6 +220,9 @@ CREATE UNIQUE INDEX "Product_productId_key" ON "Product"("productId");
 ALTER TABLE "User" ADD CONSTRAINT "User_bagId_fkey" FOREIGN KEY ("bagId") REFERENCES "Bag"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_wishlistId_fkey" FOREIGN KEY ("wishlistId") REFERENCES "Wishlist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Bag" ADD CONSTRAINT "Bag_summaryId_fkey" FOREIGN KEY ("summaryId") REFERENCES "Summary"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -200,6 +230,12 @@ ALTER TABLE "BagItem" ADD CONSTRAINT "BagItem_bagId_fkey" FOREIGN KEY ("bagId") 
 
 -- AddForeignKey
 ALTER TABLE "BagItem" ADD CONSTRAINT "BagItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("productId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WishlistItem" ADD CONSTRAINT "WishlistItem_wishlistId_fkey" FOREIGN KEY ("wishlistId") REFERENCES "Wishlist"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WishlistItem" ADD CONSTRAINT "WishlistItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("productId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_masterCategoryId_fkey" FOREIGN KEY ("masterCategoryId") REFERENCES "MasterCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -3,6 +3,7 @@ import { prisma } from "@/utils";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import { hashPassword } from "@/utils/hashPassword";
 import { createInitialBag } from "@/utils/server/bag/createInitialBag";
+import { createInitialWishlist } from "@/utils/server/wishlist/createInitialWishlist";
 
 interface HandlerType {
   user?: any;
@@ -41,6 +42,8 @@ async function createUserHandler(
     });
 
     await createInitialBag(user.id);
+    await createInitialWishlist(user.id);
+
     return res.status(201).json({ user });
   } catch (e: any) {
     return res.status(400).json({ error: e.message });

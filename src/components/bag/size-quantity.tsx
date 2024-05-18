@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductAdapted } from "@/models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface SizeQuantityComponentProps {
   bagItem: ProductAdapted;
@@ -43,7 +43,7 @@ export const SizeQuantity: React.FC<SizeQuantityComponentProps> = ({
       <div className="w-1/2 flex flex-col justify-center mr-4 md:mr-6">
         <Select
           defaultValue={size}
-          value={sizeValue}
+          value={size}
           onValueChange={handleOnChangeSize}
           disabled={disabled}
         >
@@ -62,7 +62,7 @@ export const SizeQuantity: React.FC<SizeQuantityComponentProps> = ({
       <div className="w-1/2 flex flex-col justify-center">
         <Select
           defaultValue={`${quantity}`}
-          value={`${quantityValue}`}
+          value={`${quantity}`}
           onValueChange={handleOnChangeQuantity}
           disabled={disabled}
         >

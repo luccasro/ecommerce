@@ -28,3 +28,8 @@ export interface BagAdapted extends Bag {
   items: BagItemAdapted[];
   summary: Summary;
 }
+
+export interface FilterOptions {
+  brands: string[];
+  sizes: string[];
+}

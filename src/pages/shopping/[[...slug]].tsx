@@ -3,13 +3,15 @@ import { Button } from "@/components/ui/button";
 import { buildUrlApi } from "@/utils/buildUrlApi";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { Sort } from "@/components/listing/sort";
 import { ListingSkeleton } from "@/components/listing/listing-skeleton";
 import { Pagination } from "@/components/listing/pagination";
 import { fetcher } from "@/utils/fetcher";
+import { Filters } from "@/components/listing/filters";
+import { cn } from "@/utils/cn";
 
 const ListingPage: NextPage = () => {
   const router = useRouter();
@@ -19,12 +21,6 @@ const ListingPage: NextPage = () => {
     path: "/api/products",
     query,
   });
-  console.log(query);
-  // const gender = localStorage.getItem("gender");
-
-  // if (query.gender && gender !== query.gender) {
-  //   localStorage.setItem("gender", query.gender as string);
-  // }
 
   const { data, error, isLoading } = useSWR(url, () => fetcher(url), {
     // revalidateOnMount: query.gender ? gender !== query.gender : true,
@@ -33,11 +29,33 @@ const ListingPage: NextPage = () => {
   const products = data?.products || [];
   const pages = data?.pages;
   const totalProducts = data?.totalProducts;
+  const filterOptionsData = data?.filterOptions;
   const isSearch = query?.search;
   const [columns, setColumns] = useState(4);
+  const [filterOptions, setFilterOptionsData] = useState(filterOptionsData);
+  const [currentSlug, setCurrentSlug] = useState<string | string[] | undefined>(
+    undefined
+  );
 
-  const toggleColumns = () => {
-    setColumns(columns === 3 ? 4 : 3);
+  const isSlugChanged = useMemo(
+    () => JSON.stringify(currentSlug) !== JSON.stringify(query.slug),
+    [currentSlug, query.slug]
+  );
+
+  useEffect(() => {
+    if (!filterOptions || isSlugChanged) {
+      setFilterOptionsData(filterOptionsData);
+    }
+  }, [filterOptions, filterOptionsData, isSlugChanged]);
+
+  useEffect(() => {
+    if (isSlugChanged) {
+      setCurrentSlug(query.slug);
+    }
+  }, [isSlugChanged, query.slug]);
+
+  const changeColumns = (column: number) => {
+    setColumns(column);
   };
 
   if (error) {
@@ -60,13 +78,42 @@ const ListingPage: NextPage = () => {
       )}
       <div className="flex justify-end items-center my-4">
         <>
-          <Button
-            className=" mr-4 hidden lg:inline-block"
-            onClick={toggleColumns}
-          >
-            {columns === 3 ? "Show 4 columns" : "Show 3 columns"}
-          </Button>
-          <Sort />
+          <p className="text-sm mr-4">
+            <span className="text-muted-foreground">VIEW:</span>{" "}
+            <span
+              className={cn(
+                "text-muted-foreground",
+                columns === 3 && "text-foreground"
+              )}
+            >
+              <Button
+                variant="ghost"
+                onClick={() => changeColumns(3)}
+                className="p-0 hover:bg-transparent"
+              >
+                3
+              </Button>
+            </span>{" "}
+            <span className="text-foreground">|</span>{" "}
+            <span
+              className={cn(
+                "text-muted-foreground",
+                columns === 4 && "text-foreground"
+              )}
+            >
+              <Button
+                variant="ghost"
+                onClick={() => changeColumns(4)}
+                className="p-0 hover:bg-transparent"
+              >
+                4
+              </Button>
+            </span>
+          </p>
+          <Filters
+            filterOptions={filterOptions}
+            totalProducts={totalProducts}
+          />
         </>
       </div>
       <ul

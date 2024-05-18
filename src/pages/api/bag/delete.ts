@@ -1,7 +1,4 @@
-// pages/api/removeItemFromBag.ts
-
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
 import { prisma } from "@/utils";
 import { updateBagSummary } from "@/utils/server/bag/updateBagSummary";
 import { getCurrentSession } from "@/utils/server/session/getCurrentSession";

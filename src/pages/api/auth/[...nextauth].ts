@@ -36,6 +36,7 @@ export const authOptions: AuthOptions = {
           );
 
           if (!res.ok) {
+            console.log(res);
             throw new Error("Failed to authenticate");
           }
 
@@ -61,7 +62,6 @@ export const authOptions: AuthOptions = {
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
     maxAge: 60 * 60 * 24 * 30,
-    // encryption: true,
   },
 
   pages: {
@@ -78,10 +78,10 @@ export const authOptions: AuthOptions = {
           ...session.user,
           id: token.id,
           bag: token.bag,
+          wishlist: token.wishlist,
         } as User;
       }
 
-      // console.log("user", session.user);
       return session;
     },
 

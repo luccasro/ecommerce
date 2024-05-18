@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();
@@ -19,14 +20,8 @@ export function ThemeToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button aria-label="Toggle theme" variant="ghost" size="icon">
-          <SunIcon
-            viewBox="-5 -5 24 24"
-            className="w-7 h-7 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-          />
-          <MoonIcon
-            viewBox="-5 -5 24 24"
-            className="absolute w-7 h-7 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-          />
+          <Sun className="w-5 h-5 dark:hidden" />
+          <Moon className="w-5 h-5 hidden dark:block" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>

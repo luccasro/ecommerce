@@ -15,6 +15,8 @@ datasource db {
     createdAt DateTime @default(now())
     bag       Bag?     @relation(fields: [bagId], references: [id])
     bagId     String?  @unique
+    wishlist  Wishlist?     @relation(fields: [wishlistId], references: [id])
+    wishlistId     String?  @unique
   }
 
   model Bag {
@@ -33,6 +35,24 @@ datasource db {
     createdAt DateTime @default(now())
     bagId     String
     bag       Bag     @relation(fields: [bagId], references: [id])
+    productId Int     
+    product   Product @relation(fields: [productId], references: [productId])
+  }
+
+    model Wishlist {
+    id        String    @id @default(cuid())
+    userId    String    @unique
+    User      User[]
+    items     WishlistItem[]
+  }
+
+  model WishlistItem {
+    id        Int     @id @default(autoincrement())
+    quantity  Int
+    size      String
+    createdAt DateTime @default(now())
+    wishlistId     String
+    wishlist  Wishlist @relation(fields: [wishlistId], references: [id])
     productId Int     
     product   Product @relation(fields: [productId], references: [productId])
   }
@@ -98,6 +118,7 @@ model Product {
   discountData         DiscountData?       @relation(fields: [discountDataId], references: [id])
   discountDataId       Int?
   BagItem              BagItem[]
+  WishlistItem         WishlistItem[]
 }
 
 model MasterCategory {

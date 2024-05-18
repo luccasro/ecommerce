@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { SearchIcon } from "../icons/search";
+import { Search as SearchIcon } from "lucide-react";
 
 export const Search = () => {
   const searchParams = useSearchParams();
@@ -29,7 +29,7 @@ export const Search = () => {
     <Popover>
       <PopoverTrigger asChild>
         <Button size="icon" variant="ghost">
-          <SearchIcon />
+          <SearchIcon className="w-5 h-5" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full min-w-96">
@@ -47,7 +47,7 @@ export const Search = () => {
                 type="submit"
                 className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-md border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none"
               >
-                <SearchIcon />
+                <SearchIcon className="w-4 h-4" />
                 <span className="sr-only">Search</span>
               </button>
             </div>

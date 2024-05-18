@@ -5,11 +5,11 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { fetcher } from "@/utils/fetcher";
 import { useToast } from "@/components/ui/use-toast";
 import { ProductInfo } from "@/components/details/product-info";
 import { DetailsSkeleton } from "@/components/details/details-skeleton";
+import { ImagesSelector } from "@/components/details/image-selector";
 
 const ProductDetails: NextPage = () => {
   const router = useRouter();
@@ -20,11 +20,7 @@ const ProductDetails: NextPage = () => {
     isQueryPath: true,
   });
 
-  const { data, isLoading, isValidating } = useSWR(url, fetcher, {
-    // revalidateOnMount: false,
-    // persistData: true,
-    // refreshInterval: 3600000,
-  });
+  const { data, isLoading, isValidating } = useSWR(url, fetcher);
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -101,32 +97,13 @@ const ProductDetails: NextPage = () => {
     <div>
       <div className="md:flex items-start justify-center py-12">
         <div className="md:w-3/5 w-full md:sticky top-16">
-          <div className="flex w-full">
-            <div className="w-1/6 mr-2 flex flex-col gap-2">
-              {sideImages.map(
-                (src, index) =>
-                  src && (
-                    <Button
-                      variant="link"
-                      className="h-auto p-0"
-                      onMouseEnter={() => handleImageClick(src)}
-                      key={index}
-                    >
-                      <Image
-                        className={`w-full ${
-                          selectedImage === src &&
-                          "border border-2 border-black"
-                        }`}
-                        alt={product?.productDisplayName}
-                        src={src}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                      />
-                    </Button>
-                  )
-              )}
-            </div>
+          <div className="flex flex-col sm:flex-row w-full">
+            <ImagesSelector
+              sideImages={sideImages}
+              alt={product?.productDisplayName}
+              onSelectImage={handleImageClick}
+              className="hidden sm:flex"
+            />
             <div className="w-full">
               <Image
                 className="w-full"
@@ -137,12 +114,18 @@ const ProductDetails: NextPage = () => {
                 sizes="100vw"
               />
             </div>
+            <ImagesSelector
+              sideImages={sideImages}
+              alt={product?.productDisplayName}
+              onSelectImage={handleImageClick}
+              className="sm:hidden w-full mt-4"
+            />
           </div>
         </div>
         <ProductInfo
           product={product}
           disabled={isSubmitting || isValidating}
-          onSubmit={addToBag}
+          onAddToBag={addToBag}
         />
       </div>
     </div>

@@ -15,17 +15,15 @@ import {
 } from "../ui/drawer";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { WishlistIcon } from "../icons/wishlist";
-import { HamburguerMenuIcon } from "../icons/hamburguer-menu";
-import { CloseIcon } from "../icons/close";
 import { AccountMenu } from "./account-menu";
+import { Heart, Menu, X } from "lucide-react";
 
 const WishlistButton: React.FC = () => (
   <Link
     href="/wishlist"
     className={buttonVariants({ variant: "ghost", size: "icon" })}
   >
-    <WishlistIcon />
+    <Heart className="w-5 h-5" />
   </Link>
 );
 
@@ -44,7 +42,7 @@ export const MobileHeader: React.FC = () => {
             variant="ghost"
             className="inline-flex items-center lg:hidden hover:bg-transparent p-0"
           >
-            <HamburguerMenuIcon />
+            <Menu />
           </Button>
         </DrawerTrigger>
         <DrawerContent className="rounded-none h-full">
@@ -55,7 +53,7 @@ export const MobileHeader: React.FC = () => {
               variant="ghost"
               onClick={handleOpen}
             >
-              <CloseIcon />
+              <X />
             </Button>
           </DrawerHeader>
 
@@ -93,7 +91,11 @@ export const Header = () => {
         </Link>
         <div className="flex gap-2 hidden lg:block">
           {headerLinks.map((link) => (
-            <Link className="pr-4 font-medium" key={link.name} href={link.href}>
+            <Link
+              className="pr-4 font-semibold text-sm uppercase"
+              key={link.name}
+              href={link.href}
+            >
               {link.name}
             </Link>
           ))}

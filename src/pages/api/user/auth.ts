@@ -16,7 +16,7 @@ export default async function handle(
 async function loginUserHandler(req: NextApiRequest, res: NextApiResponse) {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({ error: "Invalid data" });
+    return res.status(400).json({ error: "Email and password are required" });
   }
 
   try {
@@ -28,6 +28,7 @@ async function loginUserHandler(req: NextApiRequest, res: NextApiResponse) {
         email: true,
         password: true,
         bag: true,
+        wishlist: true,
       },
     });
     if (user && user.password === hashPassword(password)) {
