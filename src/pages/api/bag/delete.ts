@@ -19,8 +19,9 @@ export default async function handler(
 
   const user = session.user as any;
   const userId = user.id;
+  const bagId = user.bag.id;
 
-  const { bagId, bagItemId, productId } = req.body;
+  const { bagItemId, productId } = req.body;
 
   if (!bagId || !productId) {
     return res
@@ -53,7 +54,7 @@ export default async function handler(
       });
     }
 
-    const summary = updateBagSummary(existingItem.bagId, userId, res);
+    const summary = await updateBagSummary(existingItem.bagId, userId, res);
 
     return res.status(200).json({ bagItem, summary });
   } catch (error) {

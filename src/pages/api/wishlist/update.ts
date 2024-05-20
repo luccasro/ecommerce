@@ -19,9 +19,8 @@ export default async function handler(
 
   const user = session.user as any;
   const userId = user.id;
-  const bagId = user.bag.id;
 
-  const { bagItemId, productId, size, quantity } = req.body;
+  const { bagId, bagItemId, productId, size, quantity } = req.body;
 
   if (!bagId || !productId) {
     return res.status(400).json({ error: "Parameters are missing!" });
@@ -49,7 +48,7 @@ export default async function handler(
     if (existingItem.size !== size) {
       const similarItem = await prisma.bagItem.findFirst({
         where: {
-          bagId,
+          bagId: bagId,
           productId: Number(productId),
           size: size,
           id: { not: existingItem.id },
@@ -66,7 +65,7 @@ export default async function handler(
 
         await prisma.bagItem.delete({ where: { id: existingItem.id } });
 
-        const summary = await updateBagSummary(existingItem.bagId, userId, res);
+        const summary = updateBagSummary(existingItem.bagId, userId, res);
 
         return res.status(200).json({ bagItem, summary });
       } else {
@@ -83,7 +82,7 @@ export default async function handler(
       data: updates,
     });
 
-    const summary = await updateBagSummary(existingItem.bagId, userId, res);
+    const summary = updateBagSummary(existingItem.bagId, userId, res);
 
     return res.status(200).json({ bagItem, summary });
   } catch (error) {

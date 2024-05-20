@@ -35,7 +35,7 @@ const Bag: NextPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ bagId: bag.id, bagItemId, productId }),
+        body: JSON.stringify({ bagItemId, productId }),
       });
 
       if (!response.ok) {
@@ -73,7 +73,6 @@ const Bag: NextPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          bagId: bag.id,
           bagItemId,
           productId,
           size,

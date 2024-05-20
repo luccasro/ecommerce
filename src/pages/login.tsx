@@ -192,8 +192,6 @@ const Login = () => {
     </>
   );
 
-  // console.log(session);
-
   return (
     <div className="w-full lg:flex items-center h-screen gap-24">
       <div className="lg:w-full items-center flex flex-col justify-center h-full">

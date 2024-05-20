@@ -43,8 +43,6 @@ CREATE TABLE "Wishlist" (
 -- CreateTable
 CREATE TABLE "WishlistItem" (
     "id" SERIAL NOT NULL,
-    "quantity" INTEGER NOT NULL,
-    "size" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "wishlistId" TEXT NOT NULL,
     "productId" INTEGER NOT NULL,

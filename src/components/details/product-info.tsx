@@ -58,6 +58,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
 
     onAddToBag?.(data.productId, data.size);
   };
+
   return (
     <div
       className={cn("md:w-2/5 w-full lg:ml-8 md:ml-6 md:mt-0 mt-6", className)}
@@ -103,30 +104,25 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
           </svg>
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div className="py-4 border-b border-gray-200 flex items-center justify-between mb-4">
-          <p className="text-base leading-4 text-gray-800 dark:text-gray-300">
-            Size
-          </p>
-          <div className="flex items-center justify-center">
-            <ToggleGroup
-              type="single"
-              variant="outline"
-              onValueChange={handleSizeChange}
-            >
-              {product?.sizes?.map((size, index) => (
-                <ToggleGroupItem
-                  value={size.value}
-                  key={index}
-                  className="ml-1"
-                >
-                  <div className="min-w-3"> {size.value}</div>
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div>
+      <div className="py-4 border-b border-gray-200 flex items-center justify-between mb-4">
+        <p className="text-base leading-4 text-gray-800 dark:text-gray-300">
+          Size
+        </p>
+        <div className="flex items-center justify-center">
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            onValueChange={handleSizeChange}
+          >
+            {product?.sizes?.map((size, index) => (
+              <ToggleGroupItem value={size.value} key={index} className="ml-1">
+                <div className="min-w-3"> {size.value}</div>
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
         </div>
-        {/* <div className="mb-2">
+      </div>
+      {/* <div className="mb-2">
           <Select name="size">
             <SelectTrigger className="w-full rounded-none border-black dark:border-white border py-6">
               <SelectValue placeholder="Choose your size" />
@@ -140,28 +136,27 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
             </SelectContent>
           </Select>
         </div> */}
-        <div className="flex">
-          <div className="mr-2 w-full">
-            <Button
-              className="h-full w-full py-3 flex"
-              onClick={handleSubmit}
-              disabled={disabled}
-            >
-              <ShoppingCart className="w-6 h-6 mr-2" />
-              Add to bag
-            </Button>
-          </div>
-          <div className="w-16">
-            <Button
-              variant="outline"
-              className="h-full w-full py-3 flex border-black dark:border-white"
-              disabled={disabled}
-            >
-              <Heart className="h-8 w-8" />
-            </Button>
-          </div>
+      <div className="flex">
+        <div className="mr-2 w-full">
+          <Button
+            className="h-full w-full py-3 flex"
+            onClick={handleSubmit}
+            disabled={disabled}
+          >
+            <ShoppingCart className="w-6 h-6 mr-2" />
+            Add to bag
+          </Button>
         </div>
-      </form>
+        <div className="w-16">
+          <Button
+            variant="outline"
+            className="h-full w-full py-3 flex border-black dark:border-white"
+            disabled={disabled}
+          >
+            <Heart className="h-8 w-8" />
+          </Button>
+        </div>
+      </div>
       <div className="py-4 mt-7">
         <Accordion type="single" defaultValue="description" collapsible>
           <AccordionItem

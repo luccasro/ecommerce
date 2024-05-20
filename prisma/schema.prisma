@@ -48,8 +48,6 @@ datasource db {
 
   model WishlistItem {
     id        Int     @id @default(autoincrement())
-    quantity  Int
-    size      String
     createdAt DateTime @default(now())
     wishlistId     String
     wishlist  Wishlist @relation(fields: [wishlistId], references: [id])

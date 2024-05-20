@@ -1,13 +1,11 @@
-import { ProductAdapted } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
 import { getCurrentSession } from "@/utils/server/session/getCurrentSession";
-import { updateBagSummary } from "@/utils/server/bag/updateBagSummary";
+import { WishlistItem } from "@prisma/client";
 
 interface HandlerType {
   error?: string;
-  bagItem?: any;
-  summary?: any;
+  wishlistItem?: WishlistItem;
 }
 
 export default async function handler(
@@ -27,38 +25,29 @@ export default async function handler(
     }
 
     const user = session.user as any;
-    const bagId = user.bag.id;
+    const wishlistId = user.wishlist.id;
 
-    const existingItem = await prisma.bagItem.findFirst({
+    const existingItem = await prisma.wishlistItem.findFirst({
       where: {
-        bagId,
-        size: size.toString(),
+        wishlistId,
         productId: Number(productId),
       },
     });
 
-    let bagItem;
+    let wishlistItem;
     if (!!existingItem) {
-      bagItem = await prisma.bagItem.update({
-        where: { id: existingItem.id },
-        data: { quantity: existingItem.quantity + 1, size: size.toString() },
-      });
+      return res.status(429).json({ error: "You already have this item!" });
     } else {
-      bagItem = await prisma.bagItem.create({
+      wishlistItem = await prisma.wishlistItem.create({
         data: {
-          quantity: 1,
-          bagId: user.bag.id,
+          wishlistId,
           productId: Number(productId),
-          size: size.toString(),
         },
       });
     }
 
-    const summary = await updateBagSummary(user.bag.id, user.id, res);
-
     res.status(200).json({
-      bagItem,
-      summary,
+      wishlistItem,
     });
   } catch (error) {
     console.error(error);

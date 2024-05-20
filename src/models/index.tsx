@@ -9,6 +9,8 @@ import {
   Bag,
   BagItem,
   Summary,
+  WishlistItem,
+  Wishlist,
 } from "@prisma/client";
 
 export interface ProductAdapted extends Product {
@@ -27,6 +29,14 @@ export interface BagItemAdapted extends BagItem {
 export interface BagAdapted extends Bag {
   items: BagItemAdapted[];
   summary: Summary;
+}
+
+export interface WishlistItemAdapted extends WishlistItem {
+  product: ProductAdapted;
+}
+
+export interface WishlistAdapted extends Wishlist {
+  items: WishlistItemAdapted[];
 }
 
 export interface FilterOptions {
