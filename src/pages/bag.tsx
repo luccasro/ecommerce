@@ -9,15 +9,19 @@ import { useToast } from "@/components/ui/use-toast";
 import { buildUrlApi } from "@/utils/buildUrlApi";
 import { Fragment } from "react";
 import { BagItem } from "@/components/bag/bag-item";
+import { apiRoutes } from "@/utils/routes";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
 
 const Bag: NextPage = () => {
   const { toast } = useToast();
 
   const { data, mutate, isLoading, isValidating } = useSWR(
-    "/api/bag",
+    apiRoutes.bag.index,
     fetcher,
     {
       revalidateOnMount: true,
+      revalidateOnFocus: false,
     }
   );
   const bag: BagAdapted = data?.bag;
@@ -27,32 +31,23 @@ const Bag: NextPage = () => {
   const removeItemFromBag = async (bagItemId: number, productId: number) => {
     try {
       const apiUrl = buildUrlApi({
-        path: "/api/bag/delete",
+        path: apiRoutes.bag.delete,
+        query: { bagItemId: `${bagItemId}`, productId: `${productId}` },
       });
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ bagItemId, productId }),
-      });
+      await axios.delete(apiUrl);
 
-      if (!response.ok) {
-        const { bagItem, summary } = await response.json();
-        toast({
-          title: "Error removing item from bag.",
-          variant: "destructive",
-        });
-      }
       await mutate();
 
       toast({
         title: "Item removed from bag successfully.",
       });
     } catch (error) {
-      console.error("Error removing item from bag:", error);
-      throw error;
+      toast({
+        title: "Error removing item from bag.",
+        variant: "destructive",
+      });
+      // throw error;
     }
   };
 
@@ -64,33 +59,21 @@ const Bag: NextPage = () => {
   ) => {
     try {
       const apiUrl = buildUrlApi({
-        path: "/api/bag/update",
+        path: apiRoutes.bag.update,
       });
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          bagItemId,
-          productId,
-          size,
-          quantity,
-        }),
+      await axios.patch(apiUrl, {
+        bagItemId,
+        productId,
+        size,
+        quantity,
       });
-
-      if (!response.ok) {
-        // const { bagItem, summary } = await response.json();
-        toast({
-          title: "Error updating your bag.",
-          variant: "destructive",
-        });
-      }
       await mutate();
     } catch (error) {
-      console.error("Error updating item from bag:", error);
-      throw error;
+      toast({
+        title: "Error updating your bag.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -149,12 +132,12 @@ const Bag: NextPage = () => {
   return (
     <div>
       <div className="w-full">
-        <h1 className="font-bold uppercase italic py-6 text-lg md:text-3xl">
+        <h1 className="font-bold uppercase italic py-6 text-xl md:text-3xl">
           Your bag
         </h1>
         <div className="flex h-full flex-col lg:flex-row">
           <div className="lg:w-2/3 py-6 lg:pr-6">
-            <div className="hidden md:flex pb-4 border-b border-black dark:border-white">
+            <div className="hidden md:flex pb-4 border-b border-foreground">
               <div className="font-semibold md:w-3/5 md:min-w-96">Item</div>
               <div className="font-semibold  w-1/6">Price</div>
               <div className="font-semibold flex w-1/2">
@@ -206,12 +189,11 @@ const Bag: NextPage = () => {
                 Shipping and taxes calculated at checkout.
               </p>
               <div className="mt-6">
-                <Link
-                  href="#"
-                  className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                >
-                  Checkout
-                </Link>
+                <Button asChild className="text-base font-medium">
+                  <Link href="#" className="w-full py-6 px-6">
+                    Checkout
+                  </Link>
+                </Button>
               </div>
             </div>
           )}

@@ -5,12 +5,14 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/utils";
 import { JWT } from "next-auth/jwt";
 import { AdapterUser } from "next-auth/adapters";
+import axios from "axios";
 
 interface User {
   id: string;
   name: string | null;
   email: string;
-  bag: any;
+  bagId: string;
+  wishlistId: string;
 }
 
 export const authOptions: AuthOptions = {
@@ -24,23 +26,19 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await fetch(
+          const res = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/api/user/auth`,
             {
-              method: "POST",
-              body: JSON.stringify(credentials),
-              headers: {
-                "Content-Type": "application/json",
-              },
+              ...credentials,
             }
           );
 
-          if (!res.ok) {
+          if (!res.data) {
             console.log(res);
             throw new Error("Failed to authenticate");
           }
 
-          const user: User = await res.json();
+          const user: User = await res.data;
 
           if (user) {
             return user;
@@ -73,14 +71,12 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async session(props) {
       const { session, user, token } = props;
-      if (token.bag) {
-        session.user = {
-          ...session.user,
-          id: token.id,
-          bag: token.bag,
-          wishlist: token.wishlist,
-        } as User;
-      }
+      session.user = {
+        ...session.user,
+        id: token.id,
+        bagId: token.bagId,
+        wishlistId: token.wishlistId,
+      } as User;
 
       return session;
     },

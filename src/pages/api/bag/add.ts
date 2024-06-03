@@ -27,7 +27,7 @@ export default async function handler(
     }
 
     const user = session.user as any;
-    const bagId = user.bag.id;
+    const bagId = user.bagId;
 
     const existingItem = await prisma.bagItem.findFirst({
       where: {
@@ -47,14 +47,14 @@ export default async function handler(
       bagItem = await prisma.bagItem.create({
         data: {
           quantity: 1,
-          bagId: user.bag.id,
+          bagId: user.bagId,
           productId: Number(productId),
           size: size.toString(),
         },
       });
     }
 
-    const summary = await updateBagSummary(user.bag.id, user.id, res);
+    const summary = await updateBagSummary(user.bagId, user.id, res);
 
     res.status(200).json({
       bagItem,

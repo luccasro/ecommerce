@@ -6,6 +6,7 @@ import { getCurrentSession } from "@/utils/server/session/getCurrentSession";
 interface HandlerType {
   error?: string;
   bag?: BagAdapted;
+  totalProducts?: number;
 }
 
 export default async function handler(
@@ -42,8 +43,13 @@ export default async function handler(
       return res.status(200).json({ error: "Products not found" });
     }
 
+    const totalProducts = bag.items
+      .map((item) => item.quantity)
+      .reduce((a, b) => a + b, 0);
+
     res.status(200).json({
       bag: bag as BagAdapted,
+      totalProducts,
     });
   } catch (error) {
     console.error(error);

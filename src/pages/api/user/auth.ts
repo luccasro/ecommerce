@@ -15,6 +15,7 @@ export default async function handle(
 
 async function loginUserHandler(req: NextApiRequest, res: NextApiResponse) {
   const { email, password } = req.body;
+
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password are required" });
   }
@@ -27,8 +28,8 @@ async function loginUserHandler(req: NextApiRequest, res: NextApiResponse) {
         name: true,
         email: true,
         password: true,
-        bag: true,
-        wishlist: true,
+        bagId: true,
+        wishlistId: true,
       },
     });
     if (user && user.password === hashPassword(password)) {

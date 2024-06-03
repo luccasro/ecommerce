@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { buildUrlApi } from "@/utils/buildUrlApi";
+import { apiRoutes } from "@/utils/routes";
+import axios from "axios";
 
 const Login = () => {
   const { data: session, status } = useSession();
@@ -39,16 +41,12 @@ const Login = () => {
     }
 
     const apiUrl = buildUrlApi({
-      path: "/api/user/create",
+      path: apiRoutes.user.create,
     });
 
     try {
-      await fetch(apiUrl, {
-        method: "POST",
-        body: JSON.stringify(userData),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      await axios.post(apiUrl, {
+        userData,
       });
 
       await login(userData.email as string, userData.password as string);

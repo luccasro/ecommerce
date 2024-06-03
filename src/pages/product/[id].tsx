@@ -10,22 +10,30 @@ import { useToast } from "@/components/ui/use-toast";
 import { ProductInfo } from "@/components/details/product-info";
 import { DetailsSkeleton } from "@/components/details/details-skeleton";
 import { ImagesSelector } from "@/components/details/image-selector";
+import { apiRoutes } from "@/utils/routes";
+import axios from "axios";
+import { useWishlist } from "@/contexts/wishlist-context";
 
 const ProductDetails: NextPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const url = buildUrlApi({
-    path: "/api/products",
+    path: apiRoutes.products,
     query: router.query,
     isQueryPath: true,
   });
 
-  const { data, isLoading, isValidating } = useSWR(url, fetcher);
+  const { getIsItemInWishlist, handleItemWishlist } = useWishlist();
+
+  const { data, isLoading, isValidating } = useSWR(url, fetcher, {
+    revalidateOnFocus: false,
+  });
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const product = data?.product as ProductAdapted;
   const error = data?.error;
+  const isItemInWishlist = getIsItemInWishlist(product?.productId);
 
   useEffect(() => {
     if (!product) return;
@@ -59,25 +67,13 @@ const ProductDetails: NextPage = () => {
 
     try {
       const apiUrl = buildUrlApi({
-        path: "/api/bag/add",
+        path: apiRoutes.bag.add,
       });
-
-      const res = await fetch(apiUrl, {
-        method: "POST",
-        body: JSON.stringify({ productId, size }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      await axios.post(apiUrl, { productId, size });
+      toast({
+        description: "Product added to bag",
       });
-
-      if (res.ok) {
-        const data = await res.json();
-        toast({
-          description: "Product added to bag",
-        });
-      }
     } catch (error) {
-      console.error("Error adding product to bag:", error);
       toast({
         description: "Error adding product to bag",
         variant: "destructive",
@@ -86,8 +82,6 @@ const ProductDetails: NextPage = () => {
       setIsSubmitting(false);
     }
   }
-
-  console.log("isValidating", isValidating);
 
   if (isLoading) {
     return <DetailsSkeleton />;
@@ -126,6 +120,8 @@ const ProductDetails: NextPage = () => {
           product={product}
           disabled={isSubmitting || isValidating}
           onAddToBag={addToBag}
+          onHandleItemWishlist={() => handleItemWishlist(product.productId)}
+          isItemInWishlist={isItemInWishlist}
         />
       </div>
     </div>

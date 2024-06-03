@@ -7,6 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { getBreadcrumb } from "@/utils/getBreadcrumb";
+import { pageRoutes } from "@/utils/routes";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
@@ -23,7 +24,7 @@ const Breadcrumbs: React.FC = () => {
   ) : (
     <>
       <BreadcrumbItem>
-        <Link href="/shopping">
+        <Link href={pageRoutes.shopping}>
           <BreadcrumbLink>Shopping</BreadcrumbLink>
         </Link>
       </BreadcrumbItem>

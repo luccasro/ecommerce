@@ -14,18 +14,18 @@ export default async function handler(
 ) {
   try {
     const session = await getCurrentSession(req, res);
-    const { productId, size } = req.body;
-
-    if (!productId || !size) {
-      return res.status(400).json({ error: "Missing productId or size" });
-    }
+    const { productId } = req.body;
 
     if (!session) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
+    if (!productId) {
+      return res.status(400).json({ error: "Missing productId" });
+    }
+
     const user = session.user as any;
-    const wishlistId = user.wishlist.id;
+    const wishlistId = user.wishlistId;
 
     const existingItem = await prisma.wishlistItem.findFirst({
       where: {
