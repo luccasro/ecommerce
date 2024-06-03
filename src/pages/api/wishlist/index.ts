@@ -17,8 +17,7 @@ export default async function handler(
 
     const user = session?.user as any;
 
-    if (!session || !user || !user.id)
-      return res.status(401).json({ error: "Unauthorized" });
+    if (!user) return res.status(401).json({ error: "Unauthorized" });
 
     const wishlist = await prisma.wishlist.findFirst({
       where: { userId: user.id },
@@ -29,6 +28,7 @@ export default async function handler(
             product: {
               include: {
                 styleImages: true,
+                sizes: true,
               },
             },
           },

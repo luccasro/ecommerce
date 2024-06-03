@@ -1,5 +1,6 @@
 "use client";
 import { ThemeProvider } from "@/components/theme-provider";
+import { WishlistProvider } from "@/contexts/wishlist-context";
 import { SessionProvider } from "next-auth/react";
 import React from "react";
 
@@ -11,7 +12,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <SessionProvider>{children}</SessionProvider>
+      <SessionProvider refetchOnWindowFocus={false}>
+        <WishlistProvider>{children}</WishlistProvider>
+      </SessionProvider>
     </ThemeProvider>
   );
 }

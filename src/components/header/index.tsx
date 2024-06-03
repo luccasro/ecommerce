@@ -1,84 +1,11 @@
 import Link from "next/link";
-import { Button, buttonVariants } from "../ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { headerLinks } from "@/utils/headerLinks";
 import { MiniBag } from "../bag/minibag";
 import { Search } from "./search";
-
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTrigger,
-} from "../ui/drawer";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 import { AccountMenu } from "./account-menu";
-import { Heart, Menu, X } from "lucide-react";
-
-const WishlistButton: React.FC = () => (
-  <Link
-    href="/wishlist"
-    className={buttonVariants({ variant: "ghost", size: "icon" })}
-  >
-    <Heart className="w-5 h-5" />
-  </Link>
-);
-
-export const MobileHeader: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleOpen = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  return (
-    <div className="">
-      <Drawer open={isOpen} direction="left">
-        <DrawerTrigger onClick={handleOpen}>
-          <Button
-            variant="ghost"
-            className="inline-flex items-center lg:hidden hover:bg-transparent p-0"
-          >
-            <Menu />
-          </Button>
-        </DrawerTrigger>
-        <DrawerContent className="rounded-none h-full">
-          <DrawerHeader className="border-b border-grey-600">
-            <div>Ecommerce</div>
-            <Button
-              className="absolute top-0 right-0 mt-7 mr-3 p-0 h-0 hover:bg-transparent"
-              variant="ghost"
-              onClick={handleOpen}
-            >
-              <X />
-            </Button>
-          </DrawerHeader>
-
-          <div className="flex flex-col">
-            {headerLinks.map((link) => (
-              <div
-                className="flex items-center py-4 pl-3 border-b border-grey-600 w-full"
-                key={link.name}
-              >
-                <Link
-                  onClick={() => setIsOpen(false)}
-                  className="w-full"
-                  href={link.href}
-                >
-                  {link.name}
-                </Link>
-                <ChevronRightIcon className="w-8 h-8 pr-3" />
-              </div>
-            ))}
-          </div>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  );
-};
+import { WishlistButton } from "./wishlist-button";
+import { MobileHeader } from "./mobile-header";
 
 export const Header = () => {
   return (

@@ -2,34 +2,35 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { BagItemAdapted } from "@/models";
-import { SizeQuantity } from "@/components/bag/size-quantity";
+import { BagItemAdapted, WishlistItemAdapted } from "@/models";
+import { SizeSelector } from "@/components/wishlist/size-selector";
 import { Price } from "../shared/price";
 import { X } from "lucide-react";
 import { pageRoutes } from "@/utils/routes";
 
-interface BagItemProps {
-  bagItem: BagItemAdapted;
+interface WishlistItemProps {
+  wishlistItem: WishlistItemAdapted;
   disabled?: boolean;
-  onRemove?: (bagItemId: number, productId: number) => void;
-  onChange?: (
-    bagItemId: number,
+  onRemove?: (wishlistItemId: number, productId: number) => void;
+  onSizeChange?: (wishlistItemId: number, size: string) => void;
+  onMoveToBag?: (
+    wishlistItemId: number,
     productId: number,
-    size: string,
-    quantity: number
+    size: string
   ) => void;
 }
 
-export const BagItem: React.FC<BagItemProps> = ({
-  bagItem,
+export const WishlistItem: React.FC<WishlistItemProps> = ({
+  wishlistItem,
   disabled,
   onRemove,
-  onChange,
+  onSizeChange,
+  onMoveToBag,
 }) => {
-  const { product, id: bagItemId, size, quantity } = bagItem;
+  const { product, id: wishlistItemId, size } = wishlistItem;
 
-  const handleOnChange = (size: string, quantity: number) => {
-    onChange?.(bagItemId, product.productId, size, quantity);
+  const handleOnChange = (size: string) => {
+    onSizeChange?.(wishlistItemId, size);
   };
 
   return (
@@ -51,28 +52,25 @@ export const BagItem: React.FC<BagItemProps> = ({
           <div className="mx-4 flex flex-1 flex-col">
             <div>
               <div className="flex justify-between text-sm md:text-base font-medium">
-                <Link
-                  className=""
-                  href={`${pageRoutes.product}/${product.productId}`}
-                >
+                <Link href={`${pageRoutes.product}/${product.productId}`}>
                   <h3>{product.productDisplayName}</h3>
                 </Link>
               </div>
-              <div className="mt-1 flex justify-between md:block">
+              <div className="mt-2 flex justify-between md:block">
                 <p className="text-sm text-gray-500">{product.baseColour}</p>
                 <Price
-                  className="block md:hidden"
+                  className="whitespace-nowrap block md:hidden"
                   price={product.price}
                   discountedPrice={product?.discountedPrice}
                 />
               </div>
-              <SizeQuantity
-                bagItem={product}
-                className="flex mt-1 w-full block md:hidden"
-                size={size}
-                quantity={quantity}
+              <SizeSelector
+                product={product}
+                wishlistItemId={wishlistItemId}
+                size={size as string}
                 disabled={disabled}
                 onChange={handleOnChange}
+                onMoveToBag={onMoveToBag}
               />
             </div>
             <div className="items-end h-full hidden md:flex">
@@ -85,27 +83,22 @@ export const BagItem: React.FC<BagItemProps> = ({
             </div>
           </div>
         </div>
-        <div className="w-1/6 items-center hidden md:flex">
-          <Price
-            price={product.price}
-            discountedPrice={product?.discountedPrice}
-          />
-        </div>
-        <SizeQuantity
-          bagItem={product}
+        <SizeSelector
+          product={product}
+          wishlistItemId={wishlistItemId}
           className="w-1/2 hidden md:flex"
-          size={size}
-          quantity={quantity}
+          size={size as string}
           disabled={disabled}
           onChange={handleOnChange}
+          onMoveToBag={onMoveToBag}
         />
         <Button
           variant="ghost"
-          className="p-0 hover:bg-transparent absolute top-[-15px] right-0"
+          className="p-0 hover:bg-transparent absolute top-[-8px] right-0"
           disabled={disabled}
-          onClick={() => onRemove?.(bagItemId, product.productId)}
+          onClick={() => onRemove?.(wishlistItemId, product.productId)}
         >
-          <X className="w-4 h-4 fill-black dark:fill-white" />
+          <X className="w-5 h-5 fill-black dark:fill-white" />
         </Button>
       </li>
       <Separator className="mb-6" />

@@ -6,33 +6,32 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
-  }
-
-  const session = await getCurrentSession(req, res);
-
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const user = session.user as any;
-  const wishlistId = user.wishlist.id;
-
-  const { wishlistItemId, productId } = req.body;
-
-  if (!wishlistId || !productId) {
-    return res
-      .status(400)
-      .json({ error: "Both wishlistId and productId must be provided" });
-  }
-
   try {
+    if (req.method !== "DELETE") {
+      return res.status(405).json({ error: "Method Not Allowed" });
+    }
+
+    const session = await getCurrentSession(req, res);
+
+    if (!session) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const user = session.user as any;
+    const wishlistId = user.wishlistId;
+
+    const { wishlistItemId } = req.query;
+
+    if (!wishlistId || !wishlistItemId) {
+      return res
+        .status(400)
+        .json({ error: "Both wishlistId and wishlistItemId must be provided" });
+    }
+
     const existingItem = await prisma.wishlistItem.findUnique({
       where: {
         wishlistId: wishlistId,
-        id: wishlistItemId,
-        productId: Number(productId),
+        id: Number(wishlistItemId),
       },
     });
 

@@ -24,14 +24,17 @@ interface ProductInfoProps {
   product: ProductAdapted;
   disabled?: boolean;
   className?: string;
+  isItemInWishlist?: boolean;
   onAddToBag?: (productId: string, size: string) => void;
-  onAddToWishlist?: (productId: string) => void;
+  onHandleItemWishlist?: () => void;
 }
 
 export const ProductInfo: React.FC<ProductInfoProps> = ({
   product,
   disabled,
+  isItemInWishlist,
   onAddToBag,
+  onHandleItemWishlist,
   className,
 }) => {
   const { toast } = useToast();
@@ -43,7 +46,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
     setSelectedSize(size);
   };
 
-  const handleSubmit = () => {
+  const handleAddToBag = () => {
     let data = {
       productId: product.productId.toString(),
       size: selectedSize,
@@ -70,12 +73,11 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
         <h1 className="lg:text-2xl text-xl font-semibold lg:leading-6 leading-7 text-gray-800 dark:text-white my-2">
           {product?.productDisplayName}
         </h1>
-        <p className="text-md font-semibold text-gray-600 dark:text-gray-300 ">
-          <Price
-            price={product.price}
-            discountedPrice={product?.discountedPrice}
-          />
-        </p>
+        <Price
+          className="text-md font-semibold text-gray-600 dark:text-gray-300"
+          price={product.price}
+          discountedPrice={product?.discountedPrice}
+        />
       </div>
       <div className="py-4 border-b border-gray-200 flex items-center justify-between">
         <p className="text-base leading-4 text-gray-800 dark:text-gray-300">
@@ -122,25 +124,11 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
           </ToggleGroup>
         </div>
       </div>
-      {/* <div className="mb-2">
-          <Select name="size">
-            <SelectTrigger className="w-full rounded-none border-black dark:border-white border py-6">
-              <SelectValue placeholder="Choose your size" />
-            </SelectTrigger>
-            <SelectContent>
-              {product?.sizes?.map((size, index) => (
-                <SelectItem value={size.value} key={index}>
-                  <div> {size.value}</div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div> */}
       <div className="flex">
         <div className="mr-2 w-full">
           <Button
             className="h-full w-full py-3 flex"
-            onClick={handleSubmit}
+            onClick={handleAddToBag}
             disabled={disabled}
           >
             <ShoppingCart className="w-6 h-6 mr-2" />
@@ -150,10 +138,16 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
         <div className="w-16">
           <Button
             variant="outline"
-            className="h-full w-full py-3 flex border-black dark:border-white"
+            className="h-full w-full py-3 flex border-foreground"
+            onClick={onHandleItemWishlist}
             disabled={disabled}
           >
-            <Heart className="h-8 w-8" />
+            <Heart
+              className={cn(
+                "h-8 w-8 stroke-black dark:stroke-white",
+                isItemInWishlist && "fill-black dark:fill-white"
+              )}
+            />
           </Button>
         </div>
       </div>

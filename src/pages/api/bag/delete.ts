@@ -7,7 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
+  if (req.method !== "DELETE") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
@@ -19,9 +19,9 @@ export default async function handler(
 
   const user = session.user as any;
   const userId = user.id;
-  const bagId = user.bag.id;
+  const bagId = user.bagId;
 
-  const { bagItemId, productId } = req.body;
+  const { bagItemId, productId } = req.query;
 
   if (!bagId || !productId) {
     return res
@@ -33,7 +33,7 @@ export default async function handler(
     const existingItem = await prisma.bagItem.findUnique({
       where: {
         bagId: bagId,
-        id: bagItemId,
+        id: Number(bagItemId),
         productId: Number(productId),
       },
     });

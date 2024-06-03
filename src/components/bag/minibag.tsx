@@ -12,12 +12,16 @@ import { Button, buttonVariants } from "../ui/button";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { BagAdapted } from "@/models";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, X } from "lucide-react";
+import { apiRoutes, pageRoutes } from "@/utils/routes";
 
 export const MiniBag = () => {
-  const { data, isLoading } = useSWR("/api/bag", fetcher);
+  const { data, isLoading } = useSWR(apiRoutes.bag.index, fetcher, {
+    revalidateOnFocus: false,
+  });
   const bag = data?.bag as BagAdapted;
   const bagItems = bag?.items || [];
+  const totalProducts = data?.totalProducts;
 
   return (
     <NavigationMenu>
@@ -29,10 +33,19 @@ export const MiniBag = () => {
             className="p-0 bg-transparent"
           >
             <Link
-              href="/bag"
-              className={buttonVariants({ variant: "ghost", size: "icon" })}
+              href={pageRoutes.bag}
+              className={buttonVariants({
+                variant: "ghost",
+                size: "icon",
+                className: "relative",
+              })}
             >
               <ShoppingBag className="w-5 h-5" />
+              {totalProducts && (
+                <span className="absolute right-0 top-0 rounded-full bg-primary w-4 h-4 top right p-0 m-0 text-white font-mono text-[10px] leading-normal text-center">
+                  {totalProducts}
+                </span>
+              )}
             </Link>
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -54,20 +67,7 @@ export const MiniBag = () => {
                               >
                                 <span className="absolute -inset-0.5"></span>
                                 <span className="sr-only">Close panel</span>
-                                <svg
-                                  className="h-6 w-6"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  strokeWidth="1.5"
-                                  stroke="currentColor"
-                                  aria-hidden="true"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                  />
-                                </svg>
+                                <X className="w-6 h-6" />
                               </button>
                             </div>
                           </div>
@@ -90,7 +90,7 @@ export const MiniBag = () => {
                                       <li key={index} className="flex py-6">
                                         <div className="w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                           <Link
-                                            href={`/product/${bagItem.productId}`}
+                                            href={`${pageRoutes.product}/${bagItem.productId}`}
                                           >
                                             <Image
                                               src={bagItem.styleImages.default}
@@ -156,18 +156,18 @@ export const MiniBag = () => {
                             <div className="mt-6 w-full flex justify-center gap-4">
                               <Button
                                 asChild
-                                variant="outline"
-                                className="w-1/2 text-center text-base font-medium"
+                                variant="secondary"
+                                className="w-1/2 text-base font-medium"
                               >
-                                <Link className="py-6" href="/bag">
+                                <Link className="py-6" href={pageRoutes.bag}>
                                   Bag
                                 </Link>
                               </Button>
                               <Button
                                 asChild
-                                className="w-1/2 text-center text-base font-medium"
+                                className="w-1/2 text-base font-medium"
                               >
-                                <Link className="py-6" href="/bag">
+                                <Link className="py-6" href={pageRoutes.bag}>
                                   Checkout
                                 </Link>
                               </Button>

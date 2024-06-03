@@ -45,7 +45,7 @@ export const AccountMenu: React.FC = () => {
       href="/login"
       className={buttonVariants({ variant: "ghost", size: "icon" })}
     >
-      <User className="w-[16px] h-[16px]" />
+      <User className="w-5 h-5" />
     </Link>
   );
 };

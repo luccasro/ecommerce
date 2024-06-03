@@ -6,25 +6,25 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import Breadcrumbs from "@/components/breadcrumbs";
-import { Sort } from "@/components/listing/sort";
 import { ListingSkeleton } from "@/components/listing/listing-skeleton";
 import { Pagination } from "@/components/listing/pagination";
 import { fetcher } from "@/utils/fetcher";
 import { Filters } from "@/components/listing/filters";
 import { cn } from "@/utils/cn";
+import { apiRoutes } from "@/utils/routes";
+import { useWishlist } from "@/contexts/wishlist-context";
 
 const ListingPage: NextPage = () => {
   const router = useRouter();
   const { query } = router;
 
   const url = buildUrlApi({
-    path: "/api/products",
+    path: apiRoutes.products,
     query,
   });
 
   const { data, error, isLoading } = useSWR(url, () => fetcher(url), {
-    // revalidateOnMount: query.gender ? gender !== query.gender : true,
-    // refreshInterval: 3600000, // 1hour
+    revalidateOnFocus: false,
   });
   const products = data?.products || [];
   const pages = data?.pages;
@@ -78,7 +78,7 @@ const ListingPage: NextPage = () => {
       )}
       <div className="flex justify-end items-center my-4">
         <>
-          <p className="text-sm mr-4">
+          <p className="hidden lg:block text-sm mr-4">
             <span className="text-muted-foreground">VIEW:</span>{" "}
             <span
               className={cn(
@@ -117,7 +117,7 @@ const ListingPage: NextPage = () => {
         </>
       </div>
       <ul
-        className={`grid grid-cols-2 lg:grid-cols-${columns} gap-4 justify-center mb-4`}
+        className={`grid grid-cols-2 lg:grid-cols-${columns} gap-x-4 gap-y-2 justify-center mb-4`}
       >
         {isLoading ? (
           <ListingSkeleton />
