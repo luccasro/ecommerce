@@ -52,7 +52,7 @@ const Wishlist: NextPage = () => {
   if (!wishlistItems.length) {
     return (
       <div>
-        <h1 className="font-bold uppercase italic py-6 text-lg md:text-3xl">
+        <h1 className="font-bold uppercase italic py-6 text-xl md:text-3xl">
           Your wishlist
         </h1>
         <div className="flex h-full flex-col md:flex-row">

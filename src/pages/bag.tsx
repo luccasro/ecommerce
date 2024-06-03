@@ -117,7 +117,7 @@ const Bag: NextPage = () => {
   if (!bagItems.length) {
     return (
       <div>
-        <h1 className="font-bold uppercase italic py-6 text-lg md:text-3xl">
+        <h1 className="font-bold uppercase italic py-6 text-xl md:text-3xl">
           Your bag
         </h1>
         <div className="flex h-full flex-col md:flex-row">
