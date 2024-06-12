@@ -11,8 +11,8 @@ import { ProductInfo } from "@/components/details/product-info";
 import { DetailsSkeleton } from "@/components/details/details-skeleton";
 import { ImagesSelector } from "@/components/details/image-selector";
 import { apiRoutes } from "@/utils/routes";
-import axios from "axios";
 import { useWishlist } from "@/contexts/wishlist-context";
+import { useBag } from "@/contexts/bag-contex";
 
 const ProductDetails: NextPage = () => {
   const router = useRouter();
@@ -24,12 +24,12 @@ const ProductDetails: NextPage = () => {
   });
 
   const { getIsItemInWishlist, handleItemWishlist } = useWishlist();
+  const { addToBag, isSubmitting } = useBag();
 
   const { data, isLoading, isValidating } = useSWR(url, fetcher, {
     revalidateOnFocus: false,
   });
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const product = data?.product as ProductAdapted;
   const error = data?.error;
@@ -61,27 +61,6 @@ const ProductDetails: NextPage = () => {
   const handleImageClick = (imageURL: string) => {
     setSelectedImage(imageURL);
   };
-
-  async function addToBag(productId: string, size: string) {
-    setIsSubmitting(true);
-
-    try {
-      const apiUrl = buildUrlApi({
-        path: apiRoutes.bag.add,
-      });
-      await axios.post(apiUrl, { productId, size });
-      toast({
-        description: "Product added to bag",
-      });
-    } catch (error) {
-      toast({
-        description: "Error adding product to bag",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
 
   if (isLoading) {
     return <DetailsSkeleton />;

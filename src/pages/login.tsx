@@ -89,6 +89,7 @@ const Login = () => {
         variant: "destructive",
       });
     }
+
     router.push("/");
   };
 

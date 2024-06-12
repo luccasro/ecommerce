@@ -85,7 +85,7 @@ export const BagItem: React.FC<BagItemProps> = ({
             </div>
           </div>
         </div>
-        <div className="w-1/6 items-center hidden md:flex">
+        <div className="w-1/5 items-center hidden md:flex">
           <Price
             price={product.price}
             discountedPrice={product?.discountedPrice}

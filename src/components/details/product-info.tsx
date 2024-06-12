@@ -5,13 +5,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { ProductAdapted } from "@/models";
 import { Price } from "../shared/price";
 import { Button } from "../ui/button";
@@ -138,14 +131,14 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
         <div className="w-16">
           <Button
             variant="outline"
-            className="h-full w-full py-3 flex border-foreground"
+            className="h-full w-full py-3 flex border-foreground border-input"
             onClick={onHandleItemWishlist}
             disabled={disabled}
           >
             <Heart
               className={cn(
-                "h-8 w-8 stroke-black dark:stroke-white",
-                isItemInWishlist && "fill-black dark:fill-white"
+                "h-8 w-8 stroke-primary dark:stroke-white",
+                isItemInWishlist && "fill-primary dark:fill-white"
               )}
             />
           </Button>

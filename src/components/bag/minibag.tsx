@@ -9,19 +9,28 @@ import {
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
 import { Button, buttonVariants } from "../ui/button";
-import useSWR from "swr";
-import { fetcher } from "@/utils/fetcher";
-import { BagAdapted } from "@/models";
 import { ShoppingBag, X } from "lucide-react";
-import { apiRoutes, pageRoutes } from "@/utils/routes";
+import { pageRoutes } from "@/utils/routes";
+import { useBag } from "@/contexts/bag-contex";
 
 export const MiniBag = () => {
-  const { data, isLoading } = useSWR(apiRoutes.bag.index, fetcher, {
-    revalidateOnFocus: false,
-  });
-  const bag = data?.bag as BagAdapted;
+  const {
+    bag,
+    totalProducts,
+    isLoading,
+    openMinibag,
+    closeMinibag,
+    removeItemFromBag,
+    isSubmitting,
+  } = useBag();
   const bagItems = bag?.items || [];
-  const totalProducts = data?.totalProducts;
+
+  const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    if (openMinibag) {
+      return <div onMouseLeave={closeMinibag}>{children}</div>;
+    }
+    return <NavigationMenuContent>{children}</NavigationMenuContent>;
+  };
 
   return (
     <NavigationMenu>
@@ -48,7 +57,7 @@ export const MiniBag = () => {
               )}
             </Link>
           </NavigationMenuTrigger>
-          <NavigationMenuContent>
+          <Content>
             <div>
               <div className="inset-0 overflow-hidden">
                 <div className="inset-0 overflow-hidden">
@@ -71,13 +80,11 @@ export const MiniBag = () => {
                               </button>
                             </div>
                           </div>
-
                           {!bagItems.length && (
                             <div className="mt-8">
                               <p className="text-black">Your bag is empty.</p>
                             </div>
                           )}
-
                           {!!bagItems.length && (
                             <div className="mt-8">
                               <div className="flow-root">
@@ -86,15 +93,18 @@ export const MiniBag = () => {
                                   className="-my-6 divide-y divide-gray-200"
                                 >
                                   {bagItems?.map(
-                                    ({ product: bagItem }, index: number) => (
+                                    (
+                                      { product, quantity, id: bagItemId },
+                                      index: number
+                                    ) => (
                                       <li key={index} className="flex py-6">
                                         <div className="w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                           <Link
-                                            href={`${pageRoutes.product}/${bagItem.productId}`}
+                                            href={`${pageRoutes.product}/${product.productId}`}
                                           >
                                             <Image
-                                              src={bagItem.styleImages.default}
-                                              alt={bagItem.productDisplayName}
+                                              src={product.styleImages.default}
+                                              alt={product.productDisplayName}
                                               className="h-full w-full object-cover object-top"
                                               width={0}
                                               height={0}
@@ -109,27 +119,33 @@ export const MiniBag = () => {
                                               <h3>
                                                 <a href="#">
                                                   <a href="#">
-                                                    {bagItem.productDisplayName}
+                                                    {product.productDisplayName}
                                                   </a>
                                                 </a>
                                               </h3>
                                               <p className="ml-4">
-                                                ${bagItem.price}
+                                                ${product.price}
                                               </p>
                                             </div>
                                             <p className="mt-1 text-sm text-gray-500">
-                                              {bagItem.baseColour}
+                                              {product.baseColour}
                                             </p>
                                           </div>
                                           <div className="flex flex-1 items-end justify-between text-sm">
                                             <p className="text-gray-500">
-                                              Qty 1
+                                              Qty {quantity}
                                             </p>
-
                                             <div className="flex">
                                               <Button
                                                 variant="ghost"
-                                                className="font-medium p-0 hover:bg-transparent hover:text-indigo-600"
+                                                disabled={isSubmitting}
+                                                onClick={() =>
+                                                  removeItemFromBag(
+                                                    bagItemId,
+                                                    product.productId
+                                                  )
+                                                }
+                                                className="font-medium p-0 h-auto hover:bg-transparent hover:text-indigo-600"
                                               >
                                                 Remove
                                               </Button>
@@ -180,7 +196,7 @@ export const MiniBag = () => {
                 </div>
               </div>
             </div>
-          </NavigationMenuContent>
+          </Content>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

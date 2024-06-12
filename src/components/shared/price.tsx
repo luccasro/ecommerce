@@ -18,7 +18,9 @@ export const Price: React.FC<DiscountProps> = ({
       >
         {price} €
       </span>{" "}
-      {hasDiscount && <span className="text-red-500">{discountedPrice} €</span>}
+      {hasDiscount && (
+        <span className="text-red-500">{discountedPrice}&nbsp;€</span>
+      )}
     </p>
   );
 };

@@ -64,7 +64,7 @@ const ListingPage: NextPage = () => {
 
   return (
     <div className="my-8">
-      <Breadcrumbs />
+      <Breadcrumbs withTitle={!isSearch} />
       {isSearch && (
         <div className="mt-8">
           <p className="text-sm pb-2">Your results for: </p>

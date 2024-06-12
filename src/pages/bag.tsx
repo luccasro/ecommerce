@@ -1,81 +1,17 @@
 import { Separator } from "@/components/ui/separator";
 import { NextPage } from "next";
-import useSWR from "swr";
 import Link from "next/link";
-import { fetcher } from "@/utils/fetcher";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BagAdapted } from "@/models";
-import { useToast } from "@/components/ui/use-toast";
-import { buildUrlApi } from "@/utils/buildUrlApi";
 import { Fragment } from "react";
 import { BagItem } from "@/components/bag/bag-item";
-import { apiRoutes } from "@/utils/routes";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { useBag } from "@/contexts/bag-contex";
 
 const Bag: NextPage = () => {
-  const { toast } = useToast();
-
-  const { data, mutate, isLoading, isValidating } = useSWR(
-    apiRoutes.bag.index,
-    fetcher,
-    {
-      revalidateOnMount: true,
-      revalidateOnFocus: false,
-    }
-  );
-  const bag: BagAdapted = data?.bag;
+  const { bag, isLoading, isSubmitting, removeItemFromBag, updateBagItem } =
+    useBag();
   const bagItems = bag?.items || [];
   const summary = bag?.summary;
-
-  const removeItemFromBag = async (bagItemId: number, productId: number) => {
-    try {
-      const apiUrl = buildUrlApi({
-        path: apiRoutes.bag.delete,
-        query: { bagItemId: `${bagItemId}`, productId: `${productId}` },
-      });
-
-      await axios.delete(apiUrl);
-
-      await mutate();
-
-      toast({
-        title: "Item removed from bag successfully.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error removing item from bag.",
-        variant: "destructive",
-      });
-      // throw error;
-    }
-  };
-
-  const updateBagItem = async (
-    bagItemId: number,
-    productId: number,
-    size: string,
-    quantity: number
-  ) => {
-    try {
-      const apiUrl = buildUrlApi({
-        path: apiRoutes.bag.update,
-      });
-
-      await axios.patch(apiUrl, {
-        bagItemId,
-        productId,
-        size,
-        quantity,
-      });
-      await mutate();
-    } catch (error) {
-      toast({
-        title: "Error updating your bag.",
-        variant: "destructive",
-      });
-    }
-  };
 
   if (isLoading) {
     return (
@@ -139,7 +75,7 @@ const Bag: NextPage = () => {
           <div className="lg:w-2/3 py-6 lg:pr-6">
             <div className="hidden md:flex pb-4 border-b border-foreground">
               <div className="font-semibold md:w-3/5 md:min-w-96">Item</div>
-              <div className="font-semibold  w-1/6">Price</div>
+              <div className="font-semibold  w-1/5">Price</div>
               <div className="font-semibold flex w-1/2">
                 <div className="w-1/2 mr-4 md:mr-6">Size</div>
                 <div className="w-1/2">Quantity</div>
@@ -150,14 +86,14 @@ const Bag: NextPage = () => {
                 <BagItem
                   key={bagItem.id}
                   bagItem={bagItem}
-                  disabled={isValidating}
+                  disabled={isSubmitting}
                   onRemove={removeItemFromBag}
                   onChange={updateBagItem}
                 />
               ))}
             </ul>
           </div>
-          {!!bagItems.length && (
+          {!!bagItems.length && summary && (
             <div className="lg:w-1/3 rounded-lg py-6 my-6 lg:pl-6">
               <h2 className="text-xl font-medium pb-6">Order summary</h2>
 

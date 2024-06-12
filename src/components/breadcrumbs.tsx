@@ -12,7 +12,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 
-const Breadcrumbs: React.FC = () => {
+interface BreadcrumbsProps {
+  withTitle?: boolean;
+}
+
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ withTitle }) => {
   const router = useRouter();
   const hasSlug = !!router.query.slug;
   const queryPath = (router.query.slug as string[]) || [];
@@ -32,32 +36,39 @@ const Breadcrumbs: React.FC = () => {
   );
 
   return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <Link href="/">
-            <BreadcrumbLink>Home</BreadcrumbLink>
-          </Link>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        {breadcrumbPath}
-        {hasSlug &&
-          queryPath.map((path, index) => {
-            const currentBreadcrumb = getBreadcrumb(path);
-            if (!currentBreadcrumb) return;
-            return (
-              <Fragment key={index}>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="capitalize">
-                    {currentBreadcrumb}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </Fragment>
-            );
-          })}
-      </BreadcrumbList>
-    </Breadcrumb>
+    <>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <Link href="/">
+              <BreadcrumbLink>Home</BreadcrumbLink>
+            </Link>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          {breadcrumbPath}
+          {hasSlug &&
+            queryPath.map((path, index) => {
+              const currentBreadcrumb = getBreadcrumb(path);
+              if (!currentBreadcrumb) return;
+              return (
+                <Fragment key={index}>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage className="capitalize">
+                      {currentBreadcrumb}
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                </Fragment>
+              );
+            })}
+        </BreadcrumbList>
+      </Breadcrumb>
+      {withTitle && hasSlug && (
+        <h1 className="font-bold uppercase italic pt-6 text-xl md:text-3xl">
+          {queryPath[queryPath.length - 1]}
+        </h1>
+      )}
+    </>
   );
 };
 

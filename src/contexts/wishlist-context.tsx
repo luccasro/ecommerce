@@ -1,14 +1,19 @@
-// contexts/WishlistContext.tsx
-import React, { createContext, useContext, ReactNode, useState } from "react";
-import { useSession } from "next-auth/react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import useSWR from "swr";
 import axios from "axios";
-import { getSessionStatus } from "@/utils/getSessionStatus";
 import { WishlistAdapted } from "@/models";
 import { buildUrlApi } from "@/utils/buildUrlApi";
 import { apiRoutes } from "@/utils/routes";
 import { useToast } from "@/components/ui/use-toast";
 import { fetcher } from "@/utils/fetcher";
+import { useSession } from "next-auth/react";
 
 interface WishlistContextType {
   wishlist?: WishlistAdapted;
@@ -29,6 +34,7 @@ interface WishlistContextType {
     productId: number,
     size: string
   ) => void;
+  loadWishlist: () => void;
 }
 
 export const WishlistContext = createContext<WishlistContextType | undefined>(
@@ -37,16 +43,30 @@ export const WishlistContext = createContext<WishlistContextType | undefined>(
 
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
+  const { data: session, status } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data, isLoading, error, mutate, isValidating } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     apiRoutes.wishlist.index,
     fetcher,
     {
-      revalidateOnMount: true,
+      revalidateOnMount: status === "authenticated",
       revalidateOnFocus: false,
     }
   );
+
+  const loadWishlist = useCallback(async () => {
+    await mutate();
+  }, [mutate]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (status === "authenticated" && !data) {
+        loadWishlist();
+      }
+    }
+    fetchData();
+  }, [status, data, mutate, loadWishlist]);
 
   const wishlist: WishlistAdapted = data?.wishlist;
   const totalItems = wishlist?.items?.length || 0;
@@ -198,7 +218,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
       value={{
         wishlist,
         isLoading,
-        isSubmitting: isValidating,
+        isSubmitting,
         totalItems,
         addItemToWishlist,
         removeItemFromWishlist,
@@ -207,6 +227,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
         moveItemToBagFromWishlist,
         getIsItemInWishlist,
         getWishlistItemId,
+        loadWishlist,
       }}
     >
       {children}
