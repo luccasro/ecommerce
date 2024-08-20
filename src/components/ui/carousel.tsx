@@ -8,6 +8,7 @@ import useEmblaCarousel, {
 
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
+import { Square } from "lucide-react";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -26,8 +27,11 @@ type CarouselContextProps = {
   api: ReturnType<typeof useEmblaCarousel>[1];
   scrollPrev: () => void;
   scrollNext: () => void;
+  scrollTo: (slide: number) => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+  currentSlide: number;
+  totalSlides: number;
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
@@ -85,6 +89,13 @@ const Carousel = React.forwardRef<
       api?.scrollNext();
     }, [api]);
 
+    const scrollTo = React.useCallback(
+      (slide: number) => {
+        api?.scrollTo(slide);
+      },
+      [api]
+    );
+
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "ArrowLeft") {
@@ -120,6 +131,22 @@ const Carousel = React.forwardRef<
       };
     }, [api, onSelect]);
 
+    const [currentSlide, setCurrentSlide] = React.useState(0);
+    const [totalSlides, setTotalSlides] = React.useState(0);
+
+    React.useEffect(() => {
+      if (!api) {
+        return;
+      }
+
+      setTotalSlides(api.scrollSnapList().length);
+      setCurrentSlide(api.selectedScrollSnap() + 1);
+
+      api.on("select", () => {
+        setCurrentSlide(api.selectedScrollSnap() + 1);
+      });
+    }, [api]);
+
     return (
       <CarouselContext.Provider
         value={{
@@ -130,8 +157,11 @@ const Carousel = React.forwardRef<
             orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
           scrollPrev,
           scrollNext,
+          scrollTo,
           canScrollPrev,
           canScrollNext,
+          currentSlide,
+          totalSlides,
         }}
       >
         <div
@@ -252,6 +282,35 @@ const CarouselNext = React.forwardRef<
 });
 CarouselNext.displayName = "CarouselNext";
 
+const CarouselPagination = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<typeof Button>
+>(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+  const { scrollTo, currentSlide, totalSlides } = useCarousel();
+
+  return (
+    <div className="flex justify-center">
+      {Array.from({ length: totalSlides }).map((_, index) => (
+        <Button
+          ref={ref}
+          key={index}
+          variant="ghost"
+          size="icon"
+          onClick={() => scrollTo(index)}
+          {...props}
+        >
+          <Square
+            className={
+              currentSlide === index + 1 ? "fill-primary stroke-primary" : ""
+            }
+          />
+        </Button>
+      ))}
+    </div>
+  );
+});
+CarouselPagination.displayName = "CarouselPagination";
+
 export {
   type CarouselApi,
   Carousel,
@@ -259,4 +318,5 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselPagination,
 };

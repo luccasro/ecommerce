@@ -9,7 +9,6 @@ import { ProductsCarousel } from "@/components/shared/products-carousel";
 
 export default function Home() {
   const router = useRouter();
-  const { query } = router;
 
   const url = buildUrlApi({
     path: apiRoutes.products,
@@ -24,7 +23,7 @@ export default function Home() {
   const products = data?.products || [];
 
   return (
-    <>
+    <div className="mt-6">
       <ProductsCarousel products={products} />
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -133,6 +132,6 @@ export default function Home() {
           </a>
         </div>
       </main>
-    </>
+    </div>
   );
 }
