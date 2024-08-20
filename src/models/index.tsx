@@ -11,7 +11,10 @@ import {
   Summary,
   WishlistItem,
   Wishlist,
+  User,
 } from "@prisma/client";
+
+export interface UserAdapted extends Omit<User, "password"> {}
 
 export interface ProductAdapted extends Product {
   styleImages: StyleImages;

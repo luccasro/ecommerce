@@ -100,7 +100,7 @@ export const MiniBag = () => {
                                       <li key={index} className="flex py-6">
                                         <div className="w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                           <Link
-                                            href={`${pageRoutes.product}/${product.productId}`}
+                                            href={`${pageRoutes.product}/${product.slug}`}
                                           >
                                             <Image
                                               src={product.styleImages.default}

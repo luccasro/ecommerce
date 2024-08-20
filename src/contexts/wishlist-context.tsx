@@ -14,6 +14,7 @@ import { apiRoutes } from "@/utils/routes";
 import { useToast } from "@/components/ui/use-toast";
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
+import { getSessionStatus } from "@/utils/getSessionStatus";
 
 interface WishlistContextType {
   wishlist?: WishlistAdapted;
@@ -44,6 +45,8 @@ export const WishlistContext = createContext<WishlistContextType | undefined>(
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const { data: session, status } = useSession();
+  const { isLoading: isLoadingSession, isAuthenticated } =
+    getSessionStatus(status);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data, isLoading, mutate } = useSWR(
@@ -61,12 +64,12 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function fetchData() {
-      if (status === "authenticated" && !data) {
+      if (!isLoading && isAuthenticated && !data) {
         loadWishlist();
       }
     }
     fetchData();
-  }, [status, data, mutate, loadWishlist]);
+  }, [isAuthenticated, isLoading, data, mutate, loadWishlist]);
 
   const wishlist: WishlistAdapted = data?.wishlist;
   const totalItems = wishlist?.items?.length || 0;

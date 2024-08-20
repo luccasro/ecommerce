@@ -1,16 +1,17 @@
+"use client";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { buttonVariants } from "../ui/button";
 import { pageRoutes } from "@/utils/routes";
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import { cn } from "@/utils/cn";
 
 export const WishlistButton: React.FC = () => {
   const { totalItems } = useWishlist();
-  const router = useRouter();
+  const pathname = usePathname();
 
-  const isActive = router.pathname === pageRoutes.wishlist;
+  const isActive = pathname === pageRoutes.wishlist;
 
   return (
     <Link

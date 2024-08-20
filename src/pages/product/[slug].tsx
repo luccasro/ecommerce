@@ -16,7 +16,6 @@ import { useBag } from "@/contexts/bag-contex";
 
 const ProductDetails: NextPage = () => {
   const router = useRouter();
-  const { toast } = useToast();
   const url = buildUrlApi({
     path: apiRoutes.products,
     query: router.query,
@@ -28,6 +27,7 @@ const ProductDetails: NextPage = () => {
 
   const { data, isLoading, isValidating } = useSWR(url, fetcher, {
     revalidateOnFocus: false,
+    revalidateOnMount: !!router.query?.slug,
   });
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
 

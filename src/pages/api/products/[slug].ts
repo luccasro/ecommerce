@@ -10,7 +10,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<HandlerType>
 ) {
-  const { id } = req.query;
+  const { slug } = req.query;
+
+  const id = (slug as string).split("-").pop();
 
   try {
     const product = (await prisma.product.findUnique({

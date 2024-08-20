@@ -5,6 +5,8 @@ CREATE TABLE "User" (
     "email" TEXT,
     "password" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "dateOfBirth" TIMESTAMP(3),
+    "gender" TEXT,
     "bagId" TEXT,
     "wishlistId" TEXT,
 
@@ -44,6 +46,7 @@ CREATE TABLE "Wishlist" (
 CREATE TABLE "WishlistItem" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "size" TEXT,
     "wishlistId" TEXT NOT NULL,
     "productId" INTEGER NOT NULL,
 
@@ -91,7 +94,8 @@ CREATE TABLE "Product" (
     "displayCategories" TEXT,
     "weight" TEXT,
     "navigationId" INTEGER,
-    "landingPageUrl" TEXT NOT NULL,
+    "landingPageUrl" TEXT,
+    "slug" TEXT NOT NULL,
     "codEnabled" BOOLEAN,
     "isEMIEnabled" BOOLEAN,
     "masterCategoryId" INTEGER,

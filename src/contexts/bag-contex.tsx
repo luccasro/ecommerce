@@ -14,6 +14,7 @@ import { apiRoutes } from "@/utils/routes";
 import { useToast } from "@/components/ui/use-toast";
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
+import { getSessionStatus } from "@/utils/getSessionStatus";
 
 interface WishlistContextType {
   bag?: BagAdapted;
@@ -40,6 +41,8 @@ export const BagContext = createContext<WishlistContextType | undefined>(
 export const BagProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const { data: session, status } = useSession();
+  const { isLoading: isLoadingSession, isAuthenticated } =
+    getSessionStatus(status);
 
   const { data, isLoading, mutate } = useSWR(apiRoutes.bag.index, fetcher, {
     revalidateOnMount: status === "authenticated",
@@ -52,12 +55,12 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function fetchData() {
-      if (status === "authenticated" && !data) {
+      if (!isLoadingSession && isAuthenticated && !data) {
         loadBag();
       }
     }
     fetchData();
-  }, [status, data, mutate, loadBag]);
+  }, [isAuthenticated, isLoadingSession, data, mutate, loadBag]);
 
   const bag: BagAdapted = data?.bag;
   const totalProducts = data?.totalProducts;

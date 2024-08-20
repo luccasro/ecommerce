@@ -34,7 +34,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       >
         <Link
           className="relative flex overflow-hidden"
-          href={`${pageRoutes.product}/${product.productId}`}
+          href={`${pageRoutes.product}/${product.slug}`}
         >
           <div
             className={cn(
@@ -69,7 +69,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </Link>
         <div className="mt-2 pl-2">
-          <Link href={`${pageRoutes.product}/${product.productId}`}>
+          <Link href={`${pageRoutes.product}/${product.slug}`}>
             <h5 className="text-sm tracking-tight font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">
               {product.productDisplayName}
             </h5>

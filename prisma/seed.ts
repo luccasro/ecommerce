@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+import { createProductSlug } from "../src/utils/createProductSlug";
 import { changeIdToUid } from "../src/utils/changeIdToUid";
 import { PrismaClient } from "@prisma/client";
 
@@ -32,12 +33,16 @@ async function main() {
       isEMIEnabled,
       visualTag,
       myntraRating,
+      landingPageUrl,
       ...rest
     } = product;
+
+    const slug = createProductSlug(landingPageUrl);
 
     return {
       ...rest,
       productId: uid,
+      slug,
       styleImages: {
         create: {
           default: product.styleImages.default?.imageURL || "",

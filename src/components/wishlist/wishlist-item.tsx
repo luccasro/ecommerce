@@ -38,7 +38,7 @@ export const WishlistItem: React.FC<WishlistItemProps> = ({
       <li className="relative flex flex-col md:flex-row pb-6">
         <div className="flex md:w-3/5 md:min-w-96">
           <div className="w-24 h-full flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-            <Link href={`${pageRoutes.product}/${product.productId}`}>
+            <Link href={`${pageRoutes.product}/${product.slug}`}>
               <Image
                 src={product.styleImages.default}
                 alt={product.productDisplayName}
@@ -52,7 +52,7 @@ export const WishlistItem: React.FC<WishlistItemProps> = ({
           <div className="mx-4 flex flex-1 flex-col">
             <div>
               <div className="flex justify-between text-sm md:text-base font-medium">
-                <Link href={`${pageRoutes.product}/${product.productId}`}>
+                <Link href={`${pageRoutes.product}/${product.slug}`}>
                   <h3>{product.productDisplayName}</h3>
                 </Link>
               </div>

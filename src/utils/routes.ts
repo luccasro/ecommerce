@@ -12,6 +12,9 @@ export const apiRoutes = {
   user: {
     auth: "/api/user/auth",
     create: "/api/user/create",
+    index: "/api/user",
+    update: "/api/user/update",
+    updatePassword: "/api/user/updatePassword",
   },
   wishlist: {
     add: "/api/wishlist/add",
@@ -28,5 +31,11 @@ export const pageRoutes = {
   login: "/login",
   product: "/product",
   shopping: "/shopping",
+  account: {
+    index: "/account",
+    profile: "/account/profile",
+    changePassword: "/account/change-password",
+    appearance: "/account/appearance",
+  },
   notFound: "/not-found",
 };

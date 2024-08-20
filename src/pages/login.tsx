@@ -11,6 +11,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { buildUrlApi } from "@/utils/buildUrlApi";
 import { apiRoutes } from "@/utils/routes";
 import axios from "axios";
+import { z } from "zod";
+import { loginSchema, registerSchema } from "@/schemas/login";
 
 const Login = () => {
   const { data: session, status } = useSession();
@@ -24,32 +26,28 @@ const Login = () => {
     setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
 
-    let userData = {
+    const userData = {
       name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),
+      confirmPassword: formData.get("confirmPassword"),
     };
 
-    const confirmPassword = formData.get("confirmPassword");
+    const parsed = registerSchema.safeParse(userData);
 
-    if (userData.password !== confirmPassword) {
+    if (!parsed.success) {
+      setIsSubmitting(false);
       return toast({
         title: "Something went wrong!",
-        description: "Your passwords don't match.",
+        description: parsed.error.errors[0]?.message,
         variant: "destructive",
       });
     }
-
-    const apiUrl = buildUrlApi({
-      path: apiRoutes.user.create,
-    });
+    const apiUrl = buildUrlApi({ path: apiRoutes.user.create });
 
     try {
-      await axios.post(apiUrl, {
-        userData,
-      });
-
-      await login(userData.email as string, userData.password as string);
+      await axios.post(apiUrl, { ...userData });
+      await login(parsed.data.email, parsed.data.password);
     } catch (error) {
       setIsSubmitting(false);
       console.error("Failed", error);
@@ -66,11 +64,23 @@ const Login = () => {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
+    const userData = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
 
-    await login(
-      formData.get("email") as string,
-      formData.get("password") as string
-    );
+    const parsed = loginSchema.safeParse(userData);
+
+    if (!parsed.success) {
+      setIsSubmitting(false);
+      return toast({
+        title: "Something went wrong!",
+        description: parsed.error.errors[0]?.message,
+        variant: "destructive",
+      });
+    }
+
+    await login(parsed.data.email, parsed.data.password);
   };
 
   const login = async (email: string, password: string) => {

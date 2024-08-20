@@ -4,11 +4,12 @@ import { NextApiRequest, NextApiResponse } from "next/types";
 import { hashPassword } from "@/utils/hashPassword";
 import { createInitialBag } from "@/utils/server/bag/createInitialBag";
 import { createInitialWishlist } from "@/utils/server/wishlist/createInitialWishlist";
+import { registerSchema } from "@/schemas/login";
+import { ZodIssue } from "zod";
 
 interface HandlerType {
   user?: any;
-  error?: string;
-  errors?: string[];
+  error?: string | string[] | ZodIssue[];
 }
 export default async function handle(
   req: NextApiRequest,
@@ -25,12 +26,17 @@ async function createUserHandler(
   req: NextApiRequest,
   res: NextApiResponse<HandlerType>
 ) {
-  let errors = [];
-  const { name, email, password } = req.body;
+  const { name, email, password, confirmPassword } = req.body;
 
-  if (password.length < 6) {
-    errors.push("password length should be more than 6 characters");
-    return res.status(400).json({ errors });
+  const validation = registerSchema.safeParse({
+    name,
+    email,
+    password,
+    confirmPassword,
+  });
+
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.issues });
   }
   try {
     const user = await prisma.user.create({

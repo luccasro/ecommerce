@@ -13,6 +13,8 @@ datasource db {
     email     String?  @unique
     password  String?
     createdAt DateTime @default(now())
+    dateOfBirth    DateTime?
+    gender         String?
     bag       Bag?     @relation(fields: [bagId], references: [id])
     bagId     String?  @unique
     wishlist  Wishlist?     @relation(fields: [wishlistId], references: [id])
@@ -94,7 +96,8 @@ model Product {
   displayCategories    String?
   weight               String?
   navigationId         Int?
-  landingPageUrl       String
+  landingPageUrl       String?
+  slug                 String
   codEnabled           Boolean?
   isEMIEnabled         Boolean?
   masterCategory       MasterCategory?     @relation(fields: [masterCategoryId], references: [id])

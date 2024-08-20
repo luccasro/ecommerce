@@ -10,7 +10,7 @@ export const createInitialWishlist = async (userId: string) => {
   await prisma.user.update({
     where: { id: userId },
     data: {
-      wishlistId: wishlistId,
+      wishlistId: wishlist.id,
     },
   });
 
