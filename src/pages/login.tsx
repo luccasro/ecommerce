@@ -108,7 +108,7 @@ const Login = () => {
       <div>
         <h1 className="text-3xl font-bold pb-6">Login</h1>
         <p className="text-balance text-muted-foreground pb-6">
-          Enter your email below to login to your account
+          Enter your email and password to login to your account
         </p>
       </div>
       <form className="pb-4" onSubmit={handleSubmitLogin}>
@@ -156,7 +156,7 @@ const Login = () => {
       <div>
         <h1 className="text-3xl font-bold pb-6">Create account</h1>
         <p className="text-balance text-muted-foreground pb-6">
-          Enter your email below to create to your account
+          Enter your data below to create to your account
         </p>
       </div>
       <form className="pb-4" onSubmit={handleSubmitRegister}>

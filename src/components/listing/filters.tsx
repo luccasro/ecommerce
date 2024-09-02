@@ -1,11 +1,10 @@
 import * as React from "react";
-import { SlidersHorizontal } from "lucide-react";
+import { Loader2, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -16,30 +15,25 @@ import { useRouter } from "next/router";
 import { FilterOptions } from "@/models";
 import { BrandSelector } from "./brand-selector";
 import { SizeSelector } from "./size-selector";
-import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Sort } from "./sort";
 
 interface FiltersProps {
   filterOptions?: FilterOptions;
   totalProducts?: number;
+  isLoading?: boolean;
+  disabled?: boolean;
 }
 
 export const Filters: React.FC<FiltersProps> = ({
   filterOptions,
-  totalProducts,
+  totalProducts = 0,
+  isLoading,
+  disabled,
 }) => {
   const router = useRouter();
   const hasFilters =
     Object.keys(router.query).filter((key) => key !== "slug").length > 0;
-  const [productsCount, setProductsCount] = useState<number>(
-    totalProducts || 0
-  );
-
-  useEffect(() => {
-    if (!totalProducts || totalProducts === productsCount) return;
-    setProductsCount(totalProducts || 0);
-  }, [productsCount, totalProducts]);
 
   const clearAllFilters = () => {
     router.push({
@@ -51,7 +45,7 @@ export const Filters: React.FC<FiltersProps> = ({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="flex gap-2">
+        <Button variant="outline" disabled={disabled} className="flex gap-2">
           <SlidersHorizontal size={16} />
           <span className="uppercase text-sm">Filters</span>
         </Button>
@@ -65,22 +59,24 @@ export const Filters: React.FC<FiltersProps> = ({
             Filters
           </SheetTitle>
           <Separator />
-          {/* <SheetDescription className="px-6">
-            Make changes to your filters here.
-          </SheetDescription> */}
         </SheetHeader>
         <div className="px-6">
-          {/* <Button onClick={clearAllFilters} className="w-full mt-4">
-            Clear Filters
-          </Button> */}
           <div className="py-4">
-            <Sort />
-            <PriceRange />
-            <SizeSelector sizes={filterOptions?.sizes} />
-            <BrandSelector brands={filterOptions?.brands} />
+            {filterOptions ? (
+              <>
+                <Sort />
+                <PriceRange />
+                <SizeSelector sizes={filterOptions?.sizes} />
+                <BrandSelector brands={filterOptions?.brands} />
+              </>
+            ) : (
+              <div className="flex w-full justify-center items-center">
+                <Loader2 className="mr-2 h-8 w-8 animate-spin text-primary" />
+              </div>
+            )}
           </div>
         </div>
-        <SheetFooter className="px-6 gap-2 sm:gap-0">
+        <SheetFooter className="px-6 pb-4 gap-2 sm:gap-0">
           <Button
             onClick={clearAllFilters}
             disabled={!hasFilters}
@@ -90,8 +86,12 @@ export const Filters: React.FC<FiltersProps> = ({
             Clear Filters
           </Button>
           <SheetClose asChild>
-            <Button type="submit" className="w-full">
-              Show {productsCount} results
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {!isLoading ? (
+                <p>Show {totalProducts} results</p>
+              ) : (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
             </Button>
           </SheetClose>
         </SheetFooter>

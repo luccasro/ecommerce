@@ -8,7 +8,7 @@ import useEmblaCarousel, {
 
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
-import { Square } from "lucide-react";
+import { ChevronLeft, ChevronRight, Square } from "lucide-react";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -145,6 +145,10 @@ const Carousel = React.forwardRef<
       api.on("select", () => {
         setCurrentSlide(api.selectedScrollSnap() + 1);
       });
+      api.on("resize", () => {
+        setCurrentSlide(api.selectedScrollSnap() + 1);
+        setTotalSlides(api.scrollSnapList().length);
+      });
     }, [api]);
 
     return (
@@ -227,7 +231,7 @@ CarouselItem.displayName = "CarouselItem";
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+>(({ className, variant = "ghost", size = "icon", ...props }, ref) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
   return (
@@ -236,7 +240,8 @@ const CarouselPrevious = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "absolute  h-8 w-8 rounded-full",
+        "absolute",
+        !canScrollPrev && "hidden",
         orientation === "horizontal"
           ? "-left-12 top-1/2 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -246,7 +251,8 @@ const CarouselPrevious = React.forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeftIcon className="h-4 w-4" />
+      {/* <ArrowLeftIcon className="h-4 w-4" /> */}
+      <ChevronLeft className="h-8 w-8" />
       <span className="sr-only">Previous slide</span>
     </Button>
   );
@@ -256,7 +262,7 @@ CarouselPrevious.displayName = "CarouselPrevious";
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+>(({ className, variant = "ghost", size = "icon", ...props }, ref) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
 
   return (
@@ -265,7 +271,8 @@ const CarouselNext = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "absolute h-8 w-8 rounded-full",
+        "absolute",
+        !canScrollNext && "hidden",
         orientation === "horizontal"
           ? "-right-12 top-1/2 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -275,7 +282,8 @@ const CarouselNext = React.forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRightIcon className="h-4 w-4" />
+      {/* <ArrowRightIcon className="h-4 w-4" /> */}
+      <ChevronRight className="h-8 w-8" />
       <span className="sr-only">Next slide</span>
     </Button>
   );
@@ -289,21 +297,24 @@ const CarouselPagination = React.forwardRef<
   const { scrollTo, currentSlide, totalSlides } = useCarousel();
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mt-4">
       {Array.from({ length: totalSlides }).map((_, index) => (
         <Button
           ref={ref}
           key={index}
           variant="ghost"
           size="icon"
+          className="w-6 h-6"
           onClick={() => scrollTo(index)}
           {...props}
         >
           <Square
-            className={
+            className={cn(
+              "w-4 h-4",
               currentSlide === index + 1 ? "fill-primary stroke-primary" : ""
-            }
+            )}
           />
+          <span className="sr-only">Pagination</span>
         </Button>
       ))}
     </div>

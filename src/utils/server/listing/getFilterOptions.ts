@@ -10,9 +10,10 @@ export const getFilterOptions = async ({
   pathQuery,
   searchQuery,
 }: FilterOptionsQuery) => {
-  const brandNamesQuery = await prisma.product.findMany({
+  const productsQuery = await prisma.product.findMany({
     select: {
       brandName: true,
+      sizes: true,
     },
     where: {
       AND: [pathQuery, searchQuery],
@@ -20,19 +21,15 @@ export const getFilterOptions = async ({
     distinct: ["brandName"],
   });
 
-  const brandNames = brandNamesQuery.map((product) => product.brandName);
+  const brandNames = productsQuery.map((product) => product.brandName);
 
-  const sizes = await prisma.size.findMany({
-    distinct: ["value"],
-    where: {
-      active: true,
-    },
-    select: {
-      value: true,
-    },
-  });
+  const sizes = productsQuery.flatMap((product) =>
+    product.sizes.map((size) => size.value)
+  );
 
-  const productSizes = sortSizes(sizes);
+  const uniqueSizes = Array.from(new Set(sizes));
+
+  const productSizes = sortSizes(uniqueSizes);
 
   const filterOptions = {
     brands: brandNames,

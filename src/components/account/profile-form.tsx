@@ -30,24 +30,17 @@ import {
   SelectValue,
 } from "../ui/select";
 import { accountFormSchema } from "@/schemas/account";
-import useSWR from "swr";
 import { apiRoutes } from "@/utils/routes";
-import { fetcher } from "@/utils/fetcher";
 import { useState } from "react";
 import axios from "axios";
 import { buildUrlApi } from "@/utils/buildUrlApi";
-import { AccountSkeleton } from "./account-skeleton";
 
 export type AccountFormValues = z.infer<typeof accountFormSchema>;
 
-export const ProfileForm: React.FC = () => {
-  const { data, isLoading } = useSWR(apiRoutes.user.index, fetcher, {
-    revalidateOnMount: true,
-    revalidateOnFocus: false,
-  });
+type ProfileFormProps = { user: UserAdapted };
 
+export const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const user = data?.user as UserAdapted;
   const { toast } = useToast();
 
   const defaultValues: Partial<AccountFormValues> = {
@@ -57,23 +50,9 @@ export const ProfileForm: React.FC = () => {
     dateOfBirth: user?.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
   };
 
-  const values: Partial<AccountFormValues> = {
-    name: user?.name ?? "",
-    gender: user?.gender ?? "",
-    email: user?.email ?? "",
-    dateOfBirth: !!user?.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
-  };
-
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues,
-    mode: "onChange",
-    values: {
-      name: values.name ?? "",
-      email: values.email ?? "",
-      dateOfBirth: values.dateOfBirth ?? new Date(),
-      gender: user?.gender ?? "",
-    },
   });
 
   const onSubmit = async (data: AccountFormValues) => {
@@ -99,10 +78,6 @@ export const ProfileForm: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
-  if (isLoading) {
-    return <AccountSkeleton />;
-  }
 
   return (
     <div className="space-y-6">

@@ -4,11 +4,14 @@ import { ChangePassword } from "@/components/account/change-password";
 import { ProfileForm } from "@/components/account/profile-form";
 import { SidebarNav } from "@/components/account/sidebar-nav";
 import { Separator } from "@/components/ui/separator";
+import { UserAdapted } from "@/models";
+import { fetcher } from "@/utils/fetcher";
 import { getSessionStatus } from "@/utils/getSessionStatus";
-import { pageRoutes } from "@/utils/routes";
+import { apiRoutes, pageRoutes } from "@/utils/routes";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
+import useSWR from "swr";
 
 const sidebarNavItems = [
   {
@@ -34,7 +37,20 @@ const sidebarNavItems = [
 const AccountPage = () => {
   const { status } = useSession();
   const router = useRouter();
-  const { isLoading, isAuthenticated } = getSessionStatus(status);
+  const { query } = router;
+  const { isLoading: isLoadingSessionStatus, isAuthenticated } =
+    getSessionStatus(status);
+  const { data, isLoading: isLoadingUser } = useSWR(
+    apiRoutes.user.index,
+    fetcher,
+    {
+      revalidateOnMount: true,
+      revalidateOnFocus: false,
+    }
+  );
+
+  const user = data?.user as UserAdapted;
+  const isLoading = isLoadingSessionStatus || isLoadingUser || !isAuthenticated;
 
   useEffect(() => {
     const handleRoute = () => {
@@ -42,27 +58,27 @@ const AccountPage = () => {
         router.push(pageRoutes.login);
       }
 
-      if (!router.query.slug) {
+      if (!query.slug) {
         router.push(pageRoutes.account.profile);
       }
 
       if (
-        router.query.slug &&
-        !sidebarNavItems.some((item) => item.slug === router.query.slug?.[0])
+        query.slug &&
+        !sidebarNavItems.some((item) => item.slug === query.slug?.[0])
       ) {
         router.push(pageRoutes.notFound);
       }
     };
 
     router.isReady && handleRoute();
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, query, router]);
 
   const CurrentComponent = useMemo(() => {
-    return sidebarNavItems.find((item) => item.slug === router.query.slug?.[0])
+    return sidebarNavItems.find((item) => item.slug === query.slug?.[0])
       ?.component;
-  }, [router.query.slug]);
+  }, [query.slug]);
 
-  if (isLoading && !isAuthenticated) {
+  if (isLoading) {
     return (
       <div className="p-10">
         <AccountSkeleton />
@@ -86,7 +102,7 @@ const AccountPage = () => {
           <SidebarNav items={sidebarNavItems} />
         </aside>
         <div className="flex-1 lg:max-w-2xl">
-          {CurrentComponent && <CurrentComponent />}
+          {CurrentComponent && <CurrentComponent user={user} />}
         </div>
       </div>
     </div>

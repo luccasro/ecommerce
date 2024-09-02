@@ -12,6 +12,7 @@ export const getProductsQuery = (
     price,
     brands,
     sizes,
+    season,
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
   } = query;
@@ -116,6 +117,15 @@ export const getProductsQuery = (
       ? { discountedPrice: "desc" }
       : { id: "asc" };
 
+  const seasonQuery = season
+    ? {
+        season: {
+          equals: season,
+          mode: "insensitive",
+        },
+      }
+    : {};
+
   return {
     pathQuery,
     searchQuery,
@@ -123,6 +133,7 @@ export const getProductsQuery = (
     brandsQuery,
     sizesQuery,
     sortQuery,
+    seasonQuery,
     paginationQuery,
   };
 };

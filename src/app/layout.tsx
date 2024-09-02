@@ -1,5 +1,5 @@
 "use client";
-import type { Metadata, Viewport } from "next";
+import type { Viewport } from "next";
 import "./globals.css";
 import { Header } from "../components/header";
 import Providers from "./providers";
@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { Toaster } from "@/components/ui/toaster";
+import { EditorialBanner } from "@/components/editorial/editorial-banner";
 
 export const fontSans = Inter({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
       >
         <Providers>
           <Header />
+          <EditorialBanner />
           {children}
           <Toaster />
           <Footer />

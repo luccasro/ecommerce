@@ -7,32 +7,7 @@ import { pageRoutes } from "@/utils/routes";
 
 export const AccountMenu: React.FC = () => {
   const { status } = useSession();
-  const { isLoading, isAuthenticated } = getSessionStatus(status);
-
-  // if (isLoading) {
-  //   return null;
-  // }
-
-  // if (isAuthenticated) {
-  //   return (
-  //     <DropdownMenu>
-  //       <DropdownMenuTrigger asChild>
-  //         <Button variant="ghost" size="icon">
-  //           <User className="w-5 h-5" />
-  //         </Button>
-  //       </DropdownMenuTrigger>
-  //       <DropdownMenuContent>
-  //         <DropdownMenuItem>
-  //           <Link href={pageRoutes.account.index}>Account</Link>
-  //         </DropdownMenuItem>
-  //         <DropdownMenuSeparator />
-  //         <DropdownMenuItem>Support</DropdownMenuItem>
-  //         <DropdownMenuSeparator />
-  //         <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
-  //       </DropdownMenuContent>
-  //     </DropdownMenu>
-  //   );
-  // }
+  const { isAuthenticated } = getSessionStatus(status);
 
   return (
     <Link

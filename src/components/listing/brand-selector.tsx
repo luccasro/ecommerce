@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { Checkbox } from "../ui/checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { Toggle } from "../ui/toggle";
 
@@ -21,8 +20,8 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({ brands }) => {
 
     const newQuery =
       updatedBrands.length > 0
-        ? { ...router.query, brands: updatedBrands.join(",") }
-        : { ...router.query };
+        ? { ...query, brands: updatedBrands.join(",") }
+        : { ...query };
 
     if (updatedBrands.length === 0) {
       delete newQuery.brands;

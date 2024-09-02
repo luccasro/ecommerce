@@ -10,11 +10,12 @@ import useSWR from "swr";
 import axios from "axios";
 import { WishlistAdapted } from "@/models";
 import { buildUrlApi } from "@/utils/buildUrlApi";
-import { apiRoutes } from "@/utils/routes";
+import { apiRoutes, pageRoutes } from "@/utils/routes";
 import { useToast } from "@/components/ui/use-toast";
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
 import { getSessionStatus } from "@/utils/getSessionStatus";
+import { useRouter } from "next/navigation";
 
 interface WishlistContextType {
   wishlist?: WishlistAdapted;
@@ -48,6 +49,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   const { isLoading: isLoadingSession, isAuthenticated } =
     getSessionStatus(status);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const { data, isLoading, mutate } = useSWR(
     apiRoutes.wishlist.index,
@@ -96,6 +98,11 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addItemToWishlist = async (productId: number) => {
+    if (!isAuthenticated) {
+      router.push(pageRoutes.login);
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       const apiUrl = buildUrlApi({

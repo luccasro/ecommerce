@@ -28,6 +28,7 @@ export default async function handler(
       brandsQuery,
       paginationQuery,
       sizesQuery,
+      seasonQuery,
     } = getProductsQuery(req.query);
 
     const allQueries = [
@@ -36,6 +37,7 @@ export default async function handler(
       brandsQuery,
       searchQuery,
       sizesQuery,
+      seasonQuery,
     ];
 
     const products = await prisma.product.findMany({
@@ -61,7 +63,13 @@ export default async function handler(
     });
 
     if (!totalProducts || !products.length) {
-      return res.status(404).json({ error: "Products not found" });
+      return res.status(200).json({
+        error: "Products not found",
+        products: [],
+        totalProducts: 0,
+        pages: Math.ceil(totalProducts / size),
+        filterOptions,
+      });
     }
 
     res.status(200).json({

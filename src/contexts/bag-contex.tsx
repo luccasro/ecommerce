@@ -10,11 +10,12 @@ import useSWR from "swr";
 import axios from "axios";
 import { BagAdapted, WishlistAdapted } from "@/models";
 import { buildUrlApi } from "@/utils/buildUrlApi";
-import { apiRoutes } from "@/utils/routes";
+import { apiRoutes, pageRoutes } from "@/utils/routes";
 import { useToast } from "@/components/ui/use-toast";
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
 import { getSessionStatus } from "@/utils/getSessionStatus";
+import { useRouter } from "next/navigation";
 
 interface WishlistContextType {
   bag?: BagAdapted;
@@ -43,6 +44,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   const { data: session, status } = useSession();
   const { isLoading: isLoadingSession, isAuthenticated } =
     getSessionStatus(status);
+  const router = useRouter();
 
   const { data, isLoading, mutate } = useSWR(apiRoutes.bag.index, fetcher, {
     revalidateOnMount: status === "authenticated",
@@ -72,6 +74,11 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addToBag = async (productId: string, size: string) => {
+    if (!isAuthenticated) {
+      router.push(pageRoutes.login);
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       const apiUrl = buildUrlApi({

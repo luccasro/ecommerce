@@ -1,5 +1,4 @@
 import { ProductCard } from "@/components/listing/product-card";
-import { Button } from "@/components/ui/button";
 import { buildUrlApi } from "@/utils/buildUrlApi";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -10,9 +9,8 @@ import { ListingSkeleton } from "@/components/listing/listing-skeleton";
 import { Pagination } from "@/components/listing/pagination";
 import { fetcher } from "@/utils/fetcher";
 import { Filters } from "@/components/listing/filters";
-import { cn } from "@/utils/cn";
 import { apiRoutes } from "@/utils/routes";
-import { useWishlist } from "@/contexts/wishlist-context";
+import { ColumnsSelector } from "@/components/listing/columns-selector";
 
 const ListingPage: NextPage = () => {
   const router = useRouter();
@@ -31,6 +29,7 @@ const ListingPage: NextPage = () => {
   const totalProducts = data?.totalProducts;
   const filterOptionsData = data?.filterOptions;
   const isSearch = query?.search;
+  const isEmptyProducts = !products.length && !isLoading;
   const [columns, setColumns] = useState(4);
   const [filterOptions, setFilterOptionsData] = useState(filterOptionsData);
   const [currentSlug, setCurrentSlug] = useState<string | string[] | undefined>(
@@ -58,9 +57,9 @@ const ListingPage: NextPage = () => {
     setColumns(column);
   };
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+  // if (error) {
+  //   return <p>{error}</p>;
+  // }
 
   return (
     <div className="my-8">
@@ -77,45 +76,19 @@ const ListingPage: NextPage = () => {
         </div>
       )}
       <div className="flex justify-end items-center my-4">
-        <>
-          <p className="hidden lg:block text-sm mr-4">
-            <span className="text-muted-foreground">VIEW:</span>{" "}
-            <span
-              className={cn(
-                "text-muted-foreground",
-                columns === 3 && "text-foreground"
-              )}
-            >
-              <Button
-                variant="ghost"
-                onClick={() => changeColumns(3)}
-                className="p-0 hover:bg-transparent"
-              >
-                3
-              </Button>
-            </span>{" "}
-            <span className="text-foreground">|</span>{" "}
-            <span
-              className={cn(
-                "text-muted-foreground",
-                columns === 4 && "text-foreground"
-              )}
-            >
-              <Button
-                variant="ghost"
-                onClick={() => changeColumns(4)}
-                className="p-0 hover:bg-transparent"
-              >
-                4
-              </Button>
-            </span>
-          </p>
-          <Filters
-            filterOptions={filterOptions}
-            totalProducts={totalProducts}
-          />
-        </>
+        <ColumnsSelector onChangeColumn={changeColumns} />
+        <Filters
+          filterOptions={filterOptions}
+          totalProducts={totalProducts}
+          isLoading={isLoading}
+          disabled={!!error}
+        />
       </div>
+      {isEmptyProducts && (
+        <h1 className="font-bold uppercase italic pb-6 text-xl md:text-3xl">
+          Products not found
+        </h1>
+      )}
       <ul
         className={`grid grid-cols-2 lg:grid-cols-${columns} gap-x-4 gap-y-2 justify-center mb-4`}
       >
@@ -129,7 +102,7 @@ const ListingPage: NextPage = () => {
           ))
         )}
       </ul>
-      {!isLoading && !!products.length && <Pagination pages={pages} />}
+      {!isEmptyProducts && pages && <Pagination pages={pages} />}
     </div>
   );
 };

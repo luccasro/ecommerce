@@ -3,8 +3,6 @@ import NextAuth, { AuthOptions, Session } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/utils";
-import { JWT } from "next-auth/jwt";
-import { AdapterUser } from "next-auth/adapters";
 import axios from "axios";
 
 interface User {
