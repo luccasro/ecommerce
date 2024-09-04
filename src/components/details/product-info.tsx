@@ -12,6 +12,7 @@ import { useToast } from "../ui/use-toast";
 import { cn } from "@/utils/cn";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useState } from "react";
+import { getProductColorStyle } from "@/utils/getProductColorStyle";
 
 interface ProductInfoProps {
   product: ProductAdapted;
@@ -34,6 +35,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
+  const colorStyle = getProductColorStyle(product?.baseColour);
 
   const handleSizeChange = (size: string) => {
     setSelectedSize(size);
@@ -80,23 +82,11 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
           <p className="text-sm leading-none text-gray-600 dark:text-gray-300">
             {product?.baseColour}
           </p>
-          <div className="w-6 h-6 bg-gradient-to-b from-gray-900 to-indigo-500 ml-3 mr-4 cursor-pointer"></div>
-          <svg
-            className="cursor-pointer text-gray-300 dark:text-white"
-            width="6"
-            height="10"
-            viewBox="0 0 6 10"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 1L5 5L1 9"
-              stroke="currentColor"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          {colorStyle && (
+            <div
+              className={cn("w-6 h-6 ml-3 mr-4 cursor-pointer", colorStyle)}
+            ></div>
+          )}
         </div>
       </div>
       <div className="py-4 border-b border-gray-200 flex items-center justify-between mb-4">

@@ -17,7 +17,6 @@ export const MiniBag = () => {
   const {
     bag,
     totalProducts,
-    isLoading,
     openMinibag,
     closeMinibag,
     removeItemFromBag,
@@ -36,11 +35,7 @@ export const MiniBag = () => {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger
-            disabled={isLoading}
-            hideArrows
-            className="p-0 bg-transparent"
-          >
+          <NavigationMenuTrigger hideArrows className="p-0 bg-transparent">
             <Link
               href={pageRoutes.bag}
               className={buttonVariants({

@@ -14,6 +14,7 @@ export const getFilterOptions = async ({
     select: {
       brandName: true,
       sizes: true,
+      baseColour: true,
     },
     where: {
       AND: [pathQuery, searchQuery],
@@ -27,13 +28,18 @@ export const getFilterOptions = async ({
     product.sizes.map((size) => size.value)
   );
 
+  const colors = productsQuery.map((product) => product.baseColour);
+
   const uniqueSizes = Array.from(new Set(sizes));
+
+  const productColors = Array.from(new Set(colors));
 
   const productSizes = sortSizes(uniqueSizes);
 
   const filterOptions = {
     brands: brandNames,
     sizes: productSizes,
+    colors: productColors,
   };
 
   return filterOptions;

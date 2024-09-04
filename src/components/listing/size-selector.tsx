@@ -4,7 +4,7 @@ import { Toggle } from "../ui/toggle";
 interface SizeSelectorProps {
   sizes?: string[];
 }
-export const SizeSelector: React.FC<SizeSelectorProps> = ({ sizes }) => {
+export const SizeSelector: React.FC<SizeSelectorProps> = ({ sizes = [] }) => {
   const router = useRouter();
   const { query } = router;
   const currentSizes =

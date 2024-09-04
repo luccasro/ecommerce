@@ -29,6 +29,7 @@ const ListingPage: NextPage = () => {
   const totalProducts = data?.totalProducts;
   const filterOptionsData = data?.filterOptions;
   const isSearch = query?.search;
+  const isSeason = query?.season && !isSearch;
   const isEmptyProducts = !products.length && !isLoading;
   const [columns, setColumns] = useState(4);
   const [filterOptions, setFilterOptionsData] = useState(filterOptionsData);
@@ -75,13 +76,19 @@ const ListingPage: NextPage = () => {
           </h1>
         </div>
       )}
+      {isSeason && (
+        <div className="mt-8">
+          <h1 className="font-bold uppercase italic pb-2 text-lg sm:text-4xl">
+            {query.season} Looks
+          </h1>
+        </div>
+      )}
       <div className="flex justify-end items-center my-4">
         <ColumnsSelector onChangeColumn={changeColumns} />
         <Filters
           filterOptions={filterOptions}
           totalProducts={totalProducts}
           isLoading={isLoading}
-          disabled={!!error}
         />
       </div>
       {isEmptyProducts && (

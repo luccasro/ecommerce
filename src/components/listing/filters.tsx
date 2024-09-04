@@ -17,6 +17,7 @@ import { BrandSelector } from "./brand-selector";
 import { SizeSelector } from "./size-selector";
 import { Separator } from "../ui/separator";
 import { Sort } from "./sort";
+import { ColorSelector } from "./color-selector";
 
 interface FiltersProps {
   filterOptions?: FilterOptions;
@@ -34,12 +35,39 @@ export const Filters: React.FC<FiltersProps> = ({
   const router = useRouter();
   const hasFilters =
     Object.keys(router.query).filter((key) => key !== "slug").length > 0;
+  const hasProducts = totalProducts > 0 && !isLoading;
 
   const clearAllFilters = () => {
     router.push({
       pathname: router.pathname,
       query: router.query.slug ? { slug: router.query.slug } : {},
     });
+  };
+
+  const renderFilterOptions = () => {
+    if (isLoading) {
+      return (
+        <div className="flex w-full justify-center items-center">
+          <Loader2 className="mr-2 h-8 w-8 animate-spin text-primary" />
+        </div>
+      );
+    }
+
+    if (!hasProducts) {
+      return (
+        <p className="text-center text-sm text-gray-500">No products found.</p>
+      );
+    }
+
+    return (
+      <>
+        <Sort />
+        <PriceRange />
+        <SizeSelector sizes={filterOptions?.sizes} />
+        <ColorSelector colors={filterOptions?.colors} />
+        <BrandSelector brands={filterOptions?.brands} />
+      </>
+    );
   };
 
   return (
@@ -61,20 +89,7 @@ export const Filters: React.FC<FiltersProps> = ({
           <Separator />
         </SheetHeader>
         <div className="px-6">
-          <div className="py-4">
-            {filterOptions ? (
-              <>
-                <Sort />
-                <PriceRange />
-                <SizeSelector sizes={filterOptions?.sizes} />
-                <BrandSelector brands={filterOptions?.brands} />
-              </>
-            ) : (
-              <div className="flex w-full justify-center items-center">
-                <Loader2 className="mr-2 h-8 w-8 animate-spin text-primary" />
-              </div>
-            )}
-          </div>
+          <div className="py-4">{renderFilterOptions()}</div>
         </div>
         <SheetFooter className="px-6 pb-4 gap-2 sm:gap-0">
           <Button

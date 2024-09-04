@@ -12,6 +12,7 @@ export const getProductsQuery = (
     price,
     brands,
     sizes,
+    colors,
     season,
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
@@ -108,6 +109,21 @@ export const getProductsQuery = (
         }
       : {};
 
+  const productColors =
+    (Array.isArray(colors)
+      ? colors.map((color: string) => color.toLowerCase())
+      : colors?.toLowerCase().split(",")) || [];
+
+  const colorsQuery: Object =
+    productColors && productColors.length
+      ? {
+          baseColour: {
+            in: productColors,
+            mode: "insensitive",
+          },
+        }
+      : {};
+
   const sortQuery: Object =
     sort === "recommended"
       ? { id: "asc" }
@@ -133,6 +149,7 @@ export const getProductsQuery = (
     brandsQuery,
     sizesQuery,
     sortQuery,
+    colorsQuery,
     seasonQuery,
     paginationQuery,
   };

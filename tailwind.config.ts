@@ -1,5 +1,34 @@
 import type { Config } from "tailwindcss";
 const { fontFamily } = require("tailwindcss/defaultTheme");
+const tailwindColors = require("./node_modules/tailwindcss/colors");
+const colorSafeList: string[] = ["bg-black", "bg-white"];
+
+// Skip these to avoid a load of deprecated warnings when tailwind starts up
+const deprecated = [
+  "lightBlue",
+  "warmGray",
+  "trueGray",
+  "coolGray",
+  "blueGray",
+];
+
+for (const colorName in tailwindColors) {
+  if (deprecated.includes(colorName)) {
+    continue;
+  }
+
+  const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+
+  const pallette = tailwindColors[colorName];
+
+  if (typeof pallette === "object") {
+    shades.forEach((shade) => {
+      if (shade in pallette) {
+        colorSafeList.push(`bg-${colorName}-${shade}`);
+      }
+    });
+  }
+}
 
 const config = {
   darkMode: ["class"],
@@ -10,7 +39,7 @@ const config = {
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
-  safelist: ["lg:grid-cols-3", "lg:grid-cols-4"],
+  safelist: ["lg:grid-cols-3", "lg:grid-cols-4", ...colorSafeList],
   theme: {
     container: {
       center: true,

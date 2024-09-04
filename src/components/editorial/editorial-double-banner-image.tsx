@@ -1,7 +1,7 @@
 import { pageRoutes } from "@/utils/routes";
 import { BannerImage } from "./banner-image";
 
-export const EditorialBannerImage = () => {
+export const EditorialDoubleBannerImage = () => {
   return (
     <div className="grid grid-cols-2 w-full gap-2">
       <BannerImage

@@ -5,7 +5,9 @@ import { Toggle } from "../ui/toggle";
 interface BrandSelectorProps {
   brands?: string[];
 }
-export const BrandSelector: React.FC<BrandSelectorProps> = ({ brands }) => {
+export const BrandSelector: React.FC<BrandSelectorProps> = ({
+  brands = [],
+}) => {
   const router = useRouter();
   const { query } = router;
   const currentBrands =

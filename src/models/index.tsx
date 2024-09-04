@@ -45,4 +45,5 @@ export interface WishlistAdapted extends Wishlist {
 export interface FilterOptions {
   brands: string[];
   sizes: string[];
+  colors: string[];
 }

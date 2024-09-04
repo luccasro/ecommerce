@@ -28,6 +28,7 @@ export default async function handler(
       brandsQuery,
       paginationQuery,
       sizesQuery,
+      colorsQuery,
       seasonQuery,
     } = getProductsQuery(req.query);
 
@@ -37,6 +38,7 @@ export default async function handler(
       brandsQuery,
       searchQuery,
       sizesQuery,
+      colorsQuery,
       seasonQuery,
     ];
 
