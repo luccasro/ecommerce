@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { cn } from "@/utils/cn";
 import { Heart } from "lucide-react";
 import { useWishlist } from "@/contexts/wishlist-context";
+import { Badge } from "../ui/badge";
 
 type ProductCardProps = {
   product: ProductAdapted;
@@ -16,6 +17,7 @@ type ProductCardProps = {
 export const ProductCard = ({ product }: ProductCardProps) => {
   const [isLoading, setLoading] = useState(true);
   const [isHover, setIsHover] = useState(false);
+  const isSale = product?.discountedPrice < product?.price;
 
   const { handleItemWishlist, getIsItemInWishlist, isSubmitting } =
     useWishlist();
@@ -85,14 +87,20 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             />
           </div>
         </div>
+        {isSale && (
+          <Link
+            className="absolute top-3 left-3"
+            href={`${pageRoutes.product}/${product.slug}`}
+          >
+            <Badge>SALE</Badge>
+          </Link>
+        )}
         <Button
           variant="ghost"
           size="icon"
           disabled={isSubmitting}
           onClick={() => handleItemWishlist(product.productId)}
-          className={cn(
-            "absolute top-3 right-3 p-0 w-auto h-auto hover:bg-transparent disabled:opacity-100"
-          )}
+          className="absolute top-3 right-3 p-0 w-auto h-auto hover:bg-transparent disabled:opacity-100"
         >
           <Heart
             className={cn(

@@ -19,8 +19,8 @@ export const HighlightsCarousel = () => {
   const products = data?.products || [];
 
   return (
-    <div className="mx-8">
+    <PageContent>
       <ProductsCarousel title="Highlights" products={products} />
-    </div>
+    </PageContent>
   );
 };

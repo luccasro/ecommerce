@@ -4,11 +4,13 @@ import { sortSizes } from "../sortSizes";
 interface FilterOptionsQuery {
   pathQuery: {};
   searchQuery: {};
+  seasonQuery: {};
 }
 
 export const getFilterOptions = async ({
   pathQuery,
   searchQuery,
+  seasonQuery,
 }: FilterOptionsQuery) => {
   const productsQuery = await prisma.product.findMany({
     select: {
@@ -17,9 +19,9 @@ export const getFilterOptions = async ({
       baseColour: true,
     },
     where: {
-      AND: [pathQuery, searchQuery],
+      AND: [pathQuery, searchQuery, seasonQuery],
     },
-    distinct: ["brandName"],
+    distinct: ["brandName", "baseColour"],
   });
 
   const brandNames = productsQuery.map((product) => product.brandName);

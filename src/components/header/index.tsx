@@ -3,14 +3,14 @@ import { ThemeToggle } from "./theme-toggle";
 import { headerLinks } from "@/utils/headerLinks";
 import { MiniBag } from "../bag/minibag";
 import { Search } from "./search";
-import { AccountMenu } from "./account-menu";
+import { AccountButton } from "./account-menu";
 import { WishlistButton } from "./wishlist-button";
 import { MobileHeader } from "./mobile-header";
 
 export const Header = () => {
   return (
     <header className="sticky top-0 z-40 shadow-md bg-white dark:bg-gray-900">
-      <div className="w-auto mx-4 xl:max-w-[76rem] xl:mx-auto flex h-16 shrink-0 items-center">
+      <div className="w-auto mx-6 xl:max-w-[76rem] xl:mx-auto flex h-16 shrink-0 items-center">
         <MobileHeader />
         <Link className="mr-6 hidden lg:flex" href="/">
           <CarIcon className="h-6 w-6" />
@@ -29,7 +29,7 @@ export const Header = () => {
         </div>
         <div className="ml-auto flex gap-2">
           <Search />
-          <AccountMenu />
+          <AccountButton />
           <WishlistButton />
           <MiniBag />
           <div className="hidden lg:block">

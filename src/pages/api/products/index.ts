@@ -62,6 +62,7 @@ export default async function handler(
     const filterOptions = await getFilterOptions({
       pathQuery,
       searchQuery,
+      seasonQuery,
     });
 
     if (!totalProducts || !products.length) {

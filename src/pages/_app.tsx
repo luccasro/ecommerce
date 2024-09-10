@@ -1,4 +1,5 @@
 import Layout from "@/app/layout";
+import { cn } from "@/utils/cn";
 import { pageRoutes } from "@/utils/routes";
 import { AppProps } from "next/app";
 import { useRouter } from "next/router";
@@ -20,9 +21,10 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <Layout {...pageProps}>
       <main
-        className={`${
+        className={cn(
+          "h-full min-h-screen",
           !isHomePage && "w-auto mx-6 xl:max-w-[76rem] xl:mx-auto"
-        } h-full min-h-screen`}
+        )}
       >
         <Component {...pageProps} />
       </main>

@@ -14,6 +14,7 @@ export const getProductsQuery = (
     sizes,
     colors,
     season,
+    gender,
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
   } = query;
@@ -23,7 +24,7 @@ export const getProductsQuery = (
   const skip = (pageIndex - 1) * size;
   const paginationQuery = { skip, take: size };
   let pathQuery = {};
-  const genderSlug = Array.isArray(slug) ? slug[0] : slug;
+  const genderSlug = (Array.isArray(slug) ? slug[0] : slug) || gender;
   const isGender =
     genderSlug &&
     (genderSlug === "men" || genderSlug === "women" || genderSlug === "unisex");

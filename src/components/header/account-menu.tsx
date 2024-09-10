@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Button, buttonVariants } from "../ui/button";
-import { signOut, useSession } from "next-auth/react";
+import { buttonVariants } from "../ui/button";
+import { useSession } from "next-auth/react";
 import { getSessionStatus } from "@/utils/getSessionStatus";
 import { User } from "lucide-react";
 import { pageRoutes } from "@/utils/routes";
 
-export const AccountMenu: React.FC = () => {
+export const AccountButton: React.FC = () => {
   const { status } = useSession();
   const { isAuthenticated } = getSessionStatus(status);
 
