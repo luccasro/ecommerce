@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import { ChevronRightIcon, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { headerLinks } from "@/utils/headerLinks";
+import { cn } from "@/utils/cn";
 
 export const MobileHeader: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +43,10 @@ export const MobileHeader: React.FC = () => {
         <div className="flex flex-col">
           {headerLinks.map((link) => (
             <div
-              className="flex items-center py-4 pl-3 border-b border-grey-600 w-full"
+              className={cn(
+                "flex items-center py-4 pl-3 border-b border-grey-500 w-full",
+                link.key === "sale" && "text-red-600"
+              )}
               key={link.name}
             >
               <Link

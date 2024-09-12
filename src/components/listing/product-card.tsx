@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { ProductAdapted } from "@/models";
+import { ProductSummary } from "@/models";
 import { Price } from "../shared/price";
 import { pageRoutes } from "@/utils/routes";
 import { Button } from "../ui/button";
@@ -11,7 +11,7 @@ import { useWishlist } from "@/contexts/wishlist-context";
 import { Badge } from "../ui/badge";
 
 type ProductCardProps = {
-  product: ProductAdapted;
+  product: ProductSummary;
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {

@@ -24,6 +24,18 @@ export interface ProductAdapted extends Product {
   sizes?: Size[];
   discountData?: DiscountData;
 }
+export interface ProductSummary
+  extends Pick<
+    ProductAdapted,
+    | "id"
+    | "productId"
+    | "productDisplayName"
+    | "discountedPrice"
+    | "price"
+    | "styleImages"
+    | "slug"
+    | "displayCategories"
+  > {}
 
 export interface BagItemAdapted extends BagItem {
   product: ProductAdapted;

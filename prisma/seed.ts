@@ -69,6 +69,7 @@ async function main() {
           ...product.productDescriptors.description,
         },
       },
+      isDiscounted: product.discountedPrice < product.price,
       ...(product?.discountData
         ? {
             discountData: {

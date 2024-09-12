@@ -11,6 +11,7 @@ import { fetcher } from "@/utils/fetcher";
 import { Filters } from "@/components/listing/filters";
 import { apiRoutes } from "@/utils/routes";
 import { ColumnsSelector } from "@/components/listing/columns-selector";
+import { ProductSummary } from "@/models";
 
 const ListingPage: NextPage = () => {
   const router = useRouter();
@@ -24,7 +25,7 @@ const ListingPage: NextPage = () => {
   const { data, error, isLoading } = useSWR(url, () => fetcher(url), {
     revalidateOnFocus: false,
   });
-  const products = data?.products || [];
+  const products: ProductSummary[] = data?.products || [];
   const pages = data?.pages;
   const totalProducts = data?.totalProducts;
   const filterOptionsData = data?.filterOptions;

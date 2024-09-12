@@ -1,4 +1,4 @@
-import { ProductAdapted } from "@/models";
+import { ProductSummary } from "@/models";
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +11,7 @@ import {
 import { ProductCard } from "../listing/product-card";
 
 interface ProductCardProps extends CarouselProps {
-  products: ProductAdapted[];
+  products: ProductSummary[];
   title?: string;
 }
 

@@ -1,11 +1,11 @@
-import { FilterOptions, ProductAdapted } from "@/models";
+import { FilterOptions, ProductSummary } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
 import { getProductsQuery } from "@/utils/getProductsQuery";
 import { getFilterOptions } from "@/utils/server/listing/getFilterOptions";
 interface HandlerType {
   error?: string;
-  products?: ProductAdapted[];
+  products?: ProductSummary[];
   totalProducts?: number;
   pages?: number;
   filterOptions?: FilterOptions;
@@ -30,6 +30,7 @@ export default async function handler(
       sizesQuery,
       colorsQuery,
       seasonQuery,
+      saleQuery,
     } = getProductsQuery(req.query);
 
     const allQueries = [
@@ -40,11 +41,19 @@ export default async function handler(
       sizesQuery,
       colorsQuery,
       seasonQuery,
+      saleQuery,
     ];
 
     const products = await prisma.product.findMany({
-      include: {
+      select: {
+        id: true,
+        productId: true,
+        productDisplayName: true,
+        discountedPrice: true,
+        price: true,
         styleImages: true,
+        slug: true,
+        displayCategories: true,
       },
       where: {
         AND: allQueries,
@@ -63,6 +72,7 @@ export default async function handler(
       pathQuery,
       searchQuery,
       seasonQuery,
+      saleQuery,
     });
 
     if (!totalProducts || !products.length) {

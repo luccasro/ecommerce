@@ -5,12 +5,14 @@ interface FilterOptionsQuery {
   pathQuery: {};
   searchQuery: {};
   seasonQuery: {};
+  saleQuery: {};
 }
 
 export const getFilterOptions = async ({
   pathQuery,
   searchQuery,
   seasonQuery,
+  saleQuery,
 }: FilterOptionsQuery) => {
   const productsQuery = await prisma.product.findMany({
     select: {
@@ -19,7 +21,7 @@ export const getFilterOptions = async ({
       baseColour: true,
     },
     where: {
-      AND: [pathQuery, searchQuery, seasonQuery],
+      AND: [pathQuery, searchQuery, seasonQuery, saleQuery],
     },
     distinct: ["brandName", "baseColour"],
   });

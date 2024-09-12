@@ -6,6 +6,7 @@ import { Search } from "./search";
 import { AccountButton } from "./account-menu";
 import { WishlistButton } from "./wishlist-button";
 import { MobileHeader } from "./mobile-header";
+import { cn } from "@/utils/cn";
 
 export const Header = () => {
   return (
@@ -19,7 +20,10 @@ export const Header = () => {
         <div className="flex gap-2 hidden lg:block">
           {headerLinks.map((link) => (
             <Link
-              className="pr-4 font-semibold text-sm uppercase"
+              className={cn(
+                "pr-4 font-semibold text-sm uppercase",
+                link.key === "sale" && "text-red-500"
+              )}
               key={link.name}
               href={link.href}
             >

@@ -1,3 +1,5 @@
+import { GENDER } from ".";
+
 const DEFAULT_PAGE_SIZE = 12;
 
 export const getProductsQuery = (
@@ -23,20 +25,32 @@ export const getProductsQuery = (
   const size = Number(pageSize);
   const skip = (pageIndex - 1) * size;
   const paginationQuery = { skip, take: size };
-  let pathQuery = {};
-  const genderSlug = (Array.isArray(slug) ? slug[0] : slug) || gender;
+  const firstSlug = Array.isArray(slug) ? slug[0] : slug;
   const isGender =
-    genderSlug &&
-    (genderSlug === "men" || genderSlug === "women" || genderSlug === "unisex");
+    (firstSlug && GENDER.includes(firstSlug)) ||
+    (gender && GENDER.includes(gender as string));
+  const genderValue =
+    firstSlug && GENDER.includes(firstSlug)
+      ? firstSlug
+      : gender && GENDER.includes(gender as string)
+      ? gender
+      : false;
+  const isSale = Array.isArray(slug) ? slug.includes("sale") : slug === "sale";
 
-  if (isGender) {
-    pathQuery = {
-      gender: {
-        equals: (genderSlug as string).toLowerCase(),
-        mode: "insensitive",
-      },
-    };
-  }
+  const pathQuery = isGender
+    ? {
+        gender: {
+          equals: (genderValue as string).toLowerCase(),
+          mode: "insensitive",
+        },
+      }
+    : {};
+
+  const saleQuery = isSale
+    ? {
+        isDiscounted: true,
+      }
+    : {};
 
   const searchQuery: Object = search
     ? {
@@ -145,6 +159,7 @@ export const getProductsQuery = (
 
   return {
     pathQuery,
+    saleQuery,
     searchQuery,
     priceQuery,
     brandsQuery,

@@ -98,6 +98,7 @@ CREATE TABLE "Product" (
     "slug" TEXT NOT NULL,
     "codEnabled" BOOLEAN,
     "isEMIEnabled" BOOLEAN,
+    "isDiscounted" BOOLEAN,
     "masterCategoryId" INTEGER,
     "subCategoryId" INTEGER,
     "productDescriptorsId" INTEGER,
