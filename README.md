@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">Ecommerce Project</h1>
 
-## Getting Started
+### 🚧 Under Construction
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+We are currently working on exciting new features and improvements for this project. Stay tuned for updates, and feel free to check back soon!
+
+### ➡️ Upcoming Improvements
+
+- **Checkout Process 🔨**
+- **Account Improvements 🔨**
+- **Performance Optimization 🔨**
+- **API Enhancements 🔨**
+- **Product Catalog Expansion 🔨**
+
+### 🔖 About
+
+---
+
+This project is a fake e-commerce web application built using Next.js, Prisma, and NextAuth. It provides a comprehensive platform for users to browse fake products, manage their shopping cart, wishlist, and user profiles, all with secure authentication and a seamless user experience. The project features dynamic product listings, filtering, user accounts, and smooth interactions, all using fake data.
+
+The application architecture prioritizes scalability, reusability, and modern web technologies, leveraging server-side rendering (SSR) and static site generation (SSG) to optimize performance.
+
+Built from scratch.
+
+### API Structure
+
+---
+
+```
+└── 📁auth
+        └── [...nextauth].ts          # Handles NextAuth.js authentication routes
+    └── 📁bag
+        └── add.ts                    # Adds items to the shopping bag
+        └── delete.ts                 # Deletes items from the shopping bag
+        └── index.ts                  # Retrieves the contents of the shopping bag
+        └── update.ts                 # Updates items in the shopping bag
+    └── 📁products
+        └── [slug].ts                 # Retrieves product details based on the product id
+        └── index.ts                  # Retrieves a list of products
+    └── 📁user
+        └── auth.ts                   # Handles user authentication
+        └── create.ts                 # Creates a new user
+        └── index.ts                  # Retrieves user details
+        └── update.ts                 # Updates user details
+        └── updatePassword.ts         # Updates user password
+    └── 📁wishlist
+        └── add.ts                    # Adds items to the wishlist
+        └── delete.ts                 # Deletes items from the wishlist
+        └── index.ts                  # Retrieves the contents of the wishlist
+        └── update.ts                 # Updates items in the wishlist
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🌐 Demo
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
+[View Web Demo](#)
 
-To learn more about Next.js, take a look at the following resources:
+### 🛠️ Technologies
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+This project was developed using the following technologies:
 
-## Deploy on Vercel
+- [Next.js](https://nextjs.org/)
+- [Prisma](https://www.prisma.io/)
+- [NextAuth](https://next-auth.js.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Shadcn](https://ui.shadcn.com/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [React Hook Form](https://react-hook-form.com/)
+- [Zod](https://zod.dev/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ✨ Getting started
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Prerequisites
+
+- Node.js (Version: >=20.x)
+- Yarn
+
+### Development
+
+```
+# Clone the repository
+$ git clone https://github.com/luccasro/ecommerce
+
+# Install the dependencies
+$ yarn install
+
+# Create a .env file using .env.sample as a guide, and add your next auth and database details.
+
+# Set up Prisma and the database
+$ npx prisma generate
+$ npx prisma migrate dev
+$ npx prisma db seed
+
+# Run on development server
+$ yarn dev
+
+# Build for production
+$ yarn build
+
+# Run on production server
+$ yarn start
+```
+
+### 📝 License
+
+---
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+👩🏻‍💻 **Luccas Rodrigues**
+
+[![Github Badge](https://img.shields.io/badge/-Github-242A2D?style=flat-square&logo=Github&logoColor=white&link=https://github.com/yourusername)](https://github.com/yourusername)
+[![Linkedin Badge](https://img.shields.io/badge/-Linkedin-0077B5?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/yourlinkedin)](https://www.linkedin.com/in/yourlinkedin)
