@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Banner } from "../shared/banner";
 import { pageRoutes } from "@/utils/routes";
@@ -5,7 +6,7 @@ import { getCurrentSeason } from "@/utils/getCurrentSeason";
 
 const BLOCKED_ROUTES = [pageRoutes.account.index, pageRoutes.login];
 
-export const EditorialBanner = () => {
+const EditorialBannerContent = () => {
   const pathname = usePathname();
   const query = useSearchParams();
   const currentSeason = getCurrentSeason();
@@ -19,7 +20,7 @@ export const EditorialBanner = () => {
     isCurrentSeason;
 
   if (isBlockedRoute) {
-    return;
+    return null;
   }
 
   return (
@@ -28,5 +29,13 @@ export const EditorialBanner = () => {
       buttonText="BUY NOW"
       href={bannerLink}
     />
+  );
+};
+
+export const EditorialBanner = () => {
+  return (
+    <Suspense fallback={null}>
+      <EditorialBannerContent />
+    </Suspense>
   );
 };
