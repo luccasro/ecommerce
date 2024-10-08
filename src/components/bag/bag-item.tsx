@@ -75,14 +75,14 @@ export const BagItem: React.FC<BagItemProps> = ({
                 onChange={handleOnChange}
               />
             </div>
-            <div className="items-end h-full hidden md:flex">
+            {/* <div className="items-end h-full hidden md:flex">
               <Button
                 variant="ghost"
                 className="font-medium p-0 hover:bg-transparent hover:text-indigo-600"
               >
                 Remove
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="w-1/5 items-center hidden md:flex">

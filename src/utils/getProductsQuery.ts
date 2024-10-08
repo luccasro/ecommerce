@@ -17,6 +17,7 @@ export const getProductsQuery = (
     colors,
     season,
     gender,
+    ignoredIds,
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
   } = query;
@@ -26,15 +27,17 @@ export const getProductsQuery = (
   const skip = (pageIndex - 1) * size;
   const paginationQuery = { skip, take: size };
   const firstSlug = Array.isArray(slug) ? slug[0] : slug;
-  const isGender =
-    (firstSlug && GENDER.includes(firstSlug)) ||
-    (gender && GENDER.includes(gender as string));
-  const genderValue =
-    firstSlug && GENDER.includes(firstSlug)
-      ? firstSlug
-      : gender && GENDER.includes(gender as string)
-      ? gender
-      : false;
+
+  const isGenderSlug = (value: string | undefined): boolean =>
+    value ? GENDER.includes(value.toLowerCase()) : false;
+
+  const genderValue = isGenderSlug(firstSlug)
+    ? firstSlug
+    : isGenderSlug(gender as string)
+    ? (gender as string)
+    : false;
+
+  const isGender = isGenderSlug(firstSlug) || isGenderSlug(gender as string);
   const isSale = Array.isArray(slug) ? slug.includes("sale") : slug === "sale";
 
   const pathQuery = isGender
@@ -157,6 +160,16 @@ export const getProductsQuery = (
       }
     : {};
 
+  const ignoredIdsQuery = ignoredIds
+    ? {
+        productId: {
+          notIn: Array.isArray(ignoredIds)
+            ? ignoredIds.map(Number)
+            : [Number(ignoredIds)],
+        },
+      }
+    : {};
+
   return {
     pathQuery,
     saleQuery,
@@ -168,5 +181,6 @@ export const getProductsQuery = (
     colorsQuery,
     seasonQuery,
     paginationQuery,
+    ignoredIdsQuery,
   };
 };

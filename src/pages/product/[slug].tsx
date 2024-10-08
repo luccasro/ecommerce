@@ -6,13 +6,14 @@ import useSWR from "swr";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { fetcher } from "@/utils/fetcher";
-import { useToast } from "@/components/ui/use-toast";
 import { ProductInfo } from "@/components/details/product-info";
 import { DetailsSkeleton } from "@/components/details/details-skeleton";
 import { ImagesSelector } from "@/components/details/image-selector";
 import { apiRoutes } from "@/utils/routes";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { useBag } from "@/contexts/bag-contex";
+import { HighlightsCarousel } from "@/components/editorial/highlights-carousel";
+import { useRecentlyViewed } from "@/contexts/recently-viewed-context";
 
 const ProductDetails: NextPage = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const ProductDetails: NextPage = () => {
 
   const { getIsItemInWishlist, handleItemWishlist } = useWishlist();
   const { addToBag, isSubmitting } = useBag();
+  const { addProductRecentlyViewed } = useRecentlyViewed();
 
   const { data, isLoading, isValidating } = useSWR(url, fetcher, {
     revalidateOnFocus: false,
@@ -38,7 +40,8 @@ const ProductDetails: NextPage = () => {
   useEffect(() => {
     if (!product) return;
     setSelectedImage(product?.styleImages?.default);
-  }, [product]);
+    addProductRecentlyViewed(product);
+  }, [addProductRecentlyViewed, product]);
 
   const sideImages = useMemo(
     () => [
@@ -51,7 +54,8 @@ const ProductDetails: NextPage = () => {
   );
 
   if (error) {
-    return <p>{error}</p>;
+    console.log("Error fetching product:", error);
+    return <p>An error has ocurred.</p>;
   }
 
   if (!product && !isLoading) {
@@ -67,8 +71,8 @@ const ProductDetails: NextPage = () => {
   }
 
   return (
-    <div>
-      <div className="md:flex items-start justify-center py-12">
+    <div className="py-12">
+      <div className="md:flex items-start justify-center">
         <div className="md:w-3/5 w-full md:sticky top-16">
           <div className="flex flex-col sm:flex-row w-full">
             <ImagesSelector
@@ -103,6 +107,18 @@ const ProductDetails: NextPage = () => {
           isItemInWishlist={isItemInWishlist}
         />
       </div>
+      <hr className="my-8 dark:border-white" />
+      {!isLoading && (
+        <HighlightsCarousel
+          algorithm="highlights"
+          title="You may also like"
+          productId={product?.productId}
+          brands={product?.brandName}
+          gender={product?.gender}
+          className="mx-0"
+          titleClassName="text-md md:text-xl lg:text-xl"
+        />
+      )}
     </div>
   );
 };

@@ -297,7 +297,7 @@ const CarouselPagination = React.forwardRef<
   const { scrollTo, currentSlide, totalSlides } = useCarousel();
 
   return (
-    <div className="flex justify-center mt-4">
+    <div className={cn("flex justify-center mt-4", className)}>
       {Array.from({ length: totalSlides }).map((_, index) => (
         <Button
           ref={ref}

@@ -5,11 +5,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ProductAdapted } from "@/models";
+import { BagProduct } from "@/models";
 import { useEffect, useState } from "react";
 
 interface SizeQuantityComponentProps {
-  bagItem: ProductAdapted;
+  bagItem: BagProduct;
   size: string;
   quantity: number;
   disabled?: boolean;

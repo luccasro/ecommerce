@@ -1,4 +1,3 @@
-import { ProductAdapted } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
 import { getCurrentSession } from "@/utils/server/session/getCurrentSession";

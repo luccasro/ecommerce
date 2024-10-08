@@ -45,7 +45,7 @@ export const WishlistContext = createContext<WishlistContextType | undefined>(
 
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const { isLoading: isLoadingSession, isAuthenticated } =
     getSessionStatus(status);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,7 +55,6 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     apiRoutes.wishlist.index,
     fetcher,
     {
-      revalidateOnMount: status === "authenticated",
       revalidateOnFocus: false,
     }
   );
@@ -66,12 +65,12 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function fetchData() {
-      if (!isLoading && isAuthenticated && !data) {
+      if (!isLoadingSession && isAuthenticated && !data) {
         loadWishlist();
       }
     }
     fetchData();
-  }, [isAuthenticated, isLoading, data, mutate, loadWishlist]);
+  }, [isAuthenticated, isLoadingSession, data, mutate, loadWishlist]);
 
   const wishlist: WishlistAdapted = data?.wishlist;
   const totalItems = wishlist?.items?.length || 0;

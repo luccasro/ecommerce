@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import useSWR from "swr";
 import axios from "axios";
-import { BagAdapted, WishlistAdapted } from "@/models";
+import { BagAdapted } from "@/models";
 import { buildUrlApi } from "@/utils/buildUrlApi";
 import { apiRoutes, pageRoutes } from "@/utils/routes";
 import { useToast } from "@/components/ui/use-toast";
@@ -41,13 +41,12 @@ export const BagContext = createContext<WishlistContextType | undefined>(
 
 export const BagProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const { isLoading: isLoadingSession, isAuthenticated } =
     getSessionStatus(status);
   const router = useRouter();
 
   const { data, isLoading, mutate } = useSWR(apiRoutes.bag.index, fetcher, {
-    revalidateOnMount: status === "authenticated",
     revalidateOnFocus: false,
   });
 
@@ -85,9 +84,6 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
         path: apiRoutes.bag.add,
       });
       await axios.post(apiUrl, { productId, size });
-      // toast({
-      //   description: "Product added to bag",
-      // });
 
       await mutate();
       setOpenMinibag(true);
@@ -143,7 +139,7 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
       const updatedBag = {
         ...bag,
         totalProducts: totalProducts - 1,
-        items: bag?.items?.filter((item) => item.id !== bagItemId),
+        // items: bag?.items?.filter((item) => item.id !== bagItemId),
       };
 
       await mutate({ ...data, bag: updatedBag });

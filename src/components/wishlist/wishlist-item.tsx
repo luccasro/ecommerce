@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { BagItemAdapted, WishlistItemAdapted } from "@/models";
+import { WishlistItemAdapted } from "@/models";
 import { SizeSelector } from "@/components/wishlist/size-selector";
 import { Price } from "../shared/price";
 import { X } from "lucide-react";
@@ -73,14 +73,14 @@ export const WishlistItem: React.FC<WishlistItemProps> = ({
                 onMoveToBag={onMoveToBag}
               />
             </div>
-            <div className="items-end h-full hidden md:flex">
+            {/* <div className="items-end h-full hidden md:flex">
               <Button
                 variant="ghost"
                 className="font-medium p-0 hover:bg-transparent hover:text-indigo-600"
               >
                 Remove
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
         <SizeSelector

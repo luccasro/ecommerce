@@ -1,4 +1,4 @@
-import { BagAdapted, ProductAdapted, WishlistAdapted } from "@/models";
+import { WishlistAdapted } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
 import { getCurrentSession } from "@/utils/server/session/getCurrentSession";
@@ -26,7 +26,14 @@ export default async function handler(
           orderBy: { createdAt: "asc" },
           include: {
             product: {
-              include: {
+              select: {
+                productId: true,
+                productDisplayName: true,
+                discountedPrice: true,
+                price: true,
+                baseColour: true,
+                slug: true,
+                displayCategories: true,
                 styleImages: true,
                 sizes: true,
               },

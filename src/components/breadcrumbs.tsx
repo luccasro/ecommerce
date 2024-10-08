@@ -18,9 +18,10 @@ interface BreadcrumbsProps {
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ withTitle }) => {
   const router = useRouter();
-  const { query } = router;
+  const { query, asPath } = router;
   const hasSlug = !!query.slug;
   const queryPath = (query.slug as string[]) || [];
+  console.log(asPath);
 
   const breadcrumbPath = !hasSlug ? (
     <BreadcrumbItem>

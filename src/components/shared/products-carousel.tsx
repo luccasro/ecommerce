@@ -9,23 +9,33 @@ import {
   CarouselProps,
 } from "../ui/carousel";
 import { ProductCard } from "../listing/product-card";
+import { cn } from "@/utils/cn";
 
 interface ProductCardProps extends CarouselProps {
   products: ProductSummary[];
   title?: string;
+  titleClassName?: string;
 }
 
 export const ProductsCarousel = ({
   products = [],
   title,
+  titleClassName,
   ...rest
 }: ProductCardProps) => {
-  if (!products.length) return null;
+  const productsLength = products.length;
+
+  if (!productsLength) return null;
 
   return (
-    <div className="lg:px-8">
+    <div className={cn(productsLength > 4 && "lg:px-8")}>
       {title && (
-        <h1 className="font-bold uppercase italic pb-6 text-xl md:text-2xl lg:text-3xl">
+        <h1
+          className={cn(
+            "font-bold uppercase italic pb-6 text-xl md:text-2xl lg:text-3xl",
+            titleClassName
+          )}
+        >
           {title}
         </h1>
       )}
@@ -40,15 +50,33 @@ export const ProductsCarousel = ({
           {products.map((product, index) => (
             <CarouselItem
               key={index}
-              className="basis-1/2 sm:basis-1/3 lg:basis-1/4"
+              className={cn(
+                "basis-1/2 sm:basis-1/3 lg:basis-1/3",
+                productsLength >= 4 && "lg:basis-1/4"
+              )}
             >
               <ProductCard product={product} />
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="top-[40%] hidden lg:inline-flex" />
-        <CarouselNext className="top-[40%] hidden lg:inline-flex" />
-        <CarouselPagination />
+        <CarouselPrevious
+          className={cn(
+            "top-[40%] hidden lg:inline-flex",
+            productsLength <= 4 && "lg:hidden"
+          )}
+        />
+        <CarouselNext
+          className={cn(
+            "top-[40%] hidden lg:inline-flex",
+            productsLength <= 4 && "lg:hidden"
+          )}
+        />
+        <CarouselPagination
+          className={cn(
+            productsLength <= 3 && "md:hidden",
+            productsLength <= 4 && "lg:hidden"
+          )}
+        />
       </Carousel>
     </div>
   );

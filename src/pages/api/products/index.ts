@@ -31,6 +31,7 @@ export default async function handler(
       colorsQuery,
       seasonQuery,
       saleQuery,
+      ignoredIdsQuery,
     } = getProductsQuery(req.query);
 
     const allQueries = [
@@ -42,11 +43,11 @@ export default async function handler(
       colorsQuery,
       seasonQuery,
       saleQuery,
+      ignoredIdsQuery,
     ];
 
     const products = await prisma.product.findMany({
       select: {
-        id: true,
         productId: true,
         productDisplayName: true,
         discountedPrice: true,

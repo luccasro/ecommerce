@@ -23,6 +23,7 @@ export const MiniBag = () => {
     isSubmitting,
   } = useBag();
   const bagItems = bag?.items || [];
+  const isEmpty = !bagItems.length;
 
   const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (openMinibag) {
@@ -61,10 +62,10 @@ export const MiniBag = () => {
                       <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                           <div className="flex items-start justify-between">
-                            <h2 className="text-lg font-medium text-gray-900">
+                            <h2 className="font-bold uppercase italic text-lg text-gray-900">
                               Your bag
                             </h2>
-                            <div className="ml-3 flex h-7 items-center">
+                            {/* <div className="ml-3 flex h-7 items-center">
                               <button
                                 type="button"
                                 className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
@@ -73,89 +74,87 @@ export const MiniBag = () => {
                                 <span className="sr-only">Close panel</span>
                                 <X className="w-6 h-6" />
                               </button>
-                            </div>
+                            </div> */}
                           </div>
-                          {!bagItems.length && (
+                          {isEmpty && (
                             <div className="mt-8">
                               <p className="text-black">Your bag is empty.</p>
                             </div>
                           )}
-                          {!!bagItems.length && (
+                          {!isEmpty && (
                             <div className="mt-8">
-                              <div className="flow-root">
-                                <ul
-                                  role="list"
-                                  className="-my-6 divide-y divide-gray-200"
-                                >
-                                  {bagItems?.map(
-                                    (
-                                      { product, quantity, id: bagItemId },
-                                      index: number
-                                    ) => (
-                                      <li key={index} className="flex py-6">
-                                        <div className="w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                          <Link
-                                            href={`${pageRoutes.product}/${product.slug}`}
-                                          >
-                                            <Image
-                                              src={product.styleImages.default}
-                                              alt={product.productDisplayName}
-                                              className="h-full w-full object-cover object-top"
-                                              width={0}
-                                              height={0}
-                                              sizes="100vw"
-                                            />
-                                          </Link>
-                                        </div>
+                              <ul
+                                role="list"
+                                className="-my-6 divide-y divide-gray-200"
+                              >
+                                {bagItems?.map(
+                                  (
+                                    { product, quantity, id: bagItemId },
+                                    index: number
+                                  ) => (
+                                    <li key={index} className="flex py-6">
+                                      <div className="w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                        <Link
+                                          href={`${pageRoutes.product}/${product.slug}`}
+                                        >
+                                          <Image
+                                            src={product.styleImages.default}
+                                            alt={product.productDisplayName}
+                                            className="h-full w-full object-cover object-top"
+                                            width={0}
+                                            height={0}
+                                            sizes="100vw"
+                                          />
+                                        </Link>
+                                      </div>
 
-                                        <div className="ml-4 flex flex-1 flex-col">
-                                          <div>
-                                            <div className="flex justify-between text-base font-medium text-gray-900">
-                                              <h3>
+                                      <div className="ml-4 flex flex-1 flex-col">
+                                        <div>
+                                          <div className="flex justify-between text-base font-medium text-gray-900">
+                                            <h3>
+                                              <a href="#">
                                                 <a href="#">
-                                                  <a href="#">
-                                                    {product.productDisplayName}
-                                                  </a>
+                                                  {product.productDisplayName}
                                                 </a>
-                                              </h3>
-                                              <p className="ml-4">
-                                                ${product.price}
-                                              </p>
-                                            </div>
-                                            <p className="mt-1 text-sm text-gray-500">
-                                              {product.baseColour}
+                                              </a>
+                                            </h3>
+                                            <p className="ml-4">
+                                              ${product.price}
                                             </p>
                                           </div>
-                                          <div className="flex flex-1 items-end justify-between text-sm">
-                                            <p className="text-gray-500">
-                                              Qty {quantity}
-                                            </p>
-                                            <div className="flex">
-                                              <Button
-                                                variant="ghost"
-                                                disabled={isSubmitting}
-                                                onClick={() =>
-                                                  removeItemFromBag(
-                                                    bagItemId,
-                                                    product.productId
-                                                  )
-                                                }
-                                                className="font-medium p-0 h-auto hover:bg-transparent hover:text-indigo-600"
-                                              >
-                                                Remove
-                                              </Button>
-                                            </div>
+                                          <p className="mt-1 text-sm text-gray-500">
+                                            {product.baseColour}
+                                          </p>
+                                        </div>
+                                        <div className="flex flex-1 items-end justify-between text-sm">
+                                          <p className="text-gray-500">
+                                            Qty {quantity}
+                                          </p>
+                                          <div className="flex">
+                                            <Button
+                                              variant="ghost"
+                                              disabled={isSubmitting}
+                                              onClick={() =>
+                                                removeItemFromBag(
+                                                  bagItemId,
+                                                  product.productId
+                                                )
+                                              }
+                                              className="font-medium p-0 h-auto hover:bg-transparent hover:text-indigo-600"
+                                            >
+                                              Remove
+                                            </Button>
                                           </div>
                                         </div>
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </div>
+                                      </div>
+                                    </li>
+                                  )
+                                )}
+                              </ul>
                             </div>
                           )}
                         </div>
-                        {!!bagItems.length && (
+                        {!isEmpty && (
                           <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <p>Total</p>

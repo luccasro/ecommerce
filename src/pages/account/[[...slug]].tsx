@@ -50,11 +50,11 @@ const AccountPage = () => {
   );
 
   const user = data?.user as UserAdapted;
-  const isLoading = isLoadingSessionStatus || isLoadingUser || !isAuthenticated;
+  const isLoading = isLoadingSessionStatus || isLoadingUser;
 
   useEffect(() => {
     const handleRoute = () => {
-      if (!isLoading && !isAuthenticated) {
+      if ((!isLoadingSessionStatus || !isLoadingUser) && !isAuthenticated) {
         router.push(pageRoutes.login);
       }
 

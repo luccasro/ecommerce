@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "@/utils";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import { hashPassword } from "@/utils/hashPassword";

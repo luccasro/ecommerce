@@ -27,7 +27,6 @@ export interface ProductAdapted extends Product {
 export interface ProductSummary
   extends Pick<
     ProductAdapted,
-    | "id"
     | "productId"
     | "productDisplayName"
     | "discountedPrice"
@@ -37,8 +36,15 @@ export interface ProductSummary
     | "displayCategories"
   > {}
 
+export interface BagProduct extends ProductSummary {
+  baseColour: string;
+  sizes: Size[];
+}
+
+export interface WishlistProduct extends BagProduct {}
+
 export interface BagItemAdapted extends BagItem {
-  product: ProductAdapted;
+  product: BagProduct;
 }
 
 export interface BagAdapted extends Bag {
@@ -47,7 +53,7 @@ export interface BagAdapted extends Bag {
 }
 
 export interface WishlistItemAdapted extends WishlistItem {
-  product: ProductAdapted;
+  product: WishlistProduct;
 }
 
 export interface WishlistAdapted extends Wishlist {

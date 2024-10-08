@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button, buttonVariants } from "../ui/button";
 import { signOut } from "next-auth/react";
+import { pageRoutes } from "@/utils/routes";
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
@@ -13,6 +14,10 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
 
 export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   const pathname = usePathname();
+
+  const logout = () => {
+    signOut({ callbackUrl: pageRoutes.home, redirect: true });
+  };
 
   return (
     <nav
@@ -40,7 +45,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
       <Button
         variant="ghost"
         className="pl-4 justify-start hover:bg-transparent hover:underline"
-        onClick={() => signOut()}
+        onClick={logout}
       >
         Logout
       </Button>
