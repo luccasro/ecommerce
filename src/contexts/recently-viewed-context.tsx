@@ -36,7 +36,6 @@ export const RecentlyViewedProvider = ({
 
   const addProductRecentlyViewed = (product: ProductSummary) => {
     const productSummary = {
-      id: product.id,
       productId: product.productId,
       productDisplayName: product.productDisplayName,
       discountedPrice: product.discountedPrice,
