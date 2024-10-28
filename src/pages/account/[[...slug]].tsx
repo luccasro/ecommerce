@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { UserAdapted } from "@/models";
 import { fetcher } from "@/utils/fetcher";
 import { getSessionStatus } from "@/utils/getSessionStatus";
+import { getSlugFromUrl } from "@/utils/getSlugFromUrl";
 import { apiRoutes, pageRoutes } from "@/utils/routes";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -17,19 +18,19 @@ const sidebarNavItems = [
   {
     title: "Profile",
     href: pageRoutes.account.profile,
-    slug: "profile",
+    slug: getSlugFromUrl(pageRoutes.account.profile),
     component: ProfileForm,
   },
   {
-    title: "Change Password",
+    title: "Password",
     href: pageRoutes.account.changePassword,
-    slug: "change-password",
+    slug: getSlugFromUrl(pageRoutes.account.changePassword),
     component: ChangePassword,
   },
   {
     title: "Appearance",
     href: pageRoutes.account.appearance,
-    slug: "appearance",
+    slug: getSlugFromUrl(pageRoutes.account.appearance),
     component: Appearance,
   },
 ];
@@ -54,7 +55,7 @@ const AccountPage = () => {
 
   useEffect(() => {
     const handleRoute = () => {
-      if ((!isLoadingSessionStatus || !isLoadingUser) && !isAuthenticated) {
+      if (!isLoading && !isAuthenticated) {
         router.push(pageRoutes.login);
       }
 
@@ -71,14 +72,14 @@ const AccountPage = () => {
     };
 
     router.isReady && handleRoute();
-  }, [isAuthenticated, isLoading, query, router]);
+  }, [isAuthenticated, isLoading, isLoadingUser, query, router]);
 
   const CurrentComponent = useMemo(() => {
     return sidebarNavItems.find((item) => item.slug === query.slug?.[0])
       ?.component;
   }, [query.slug]);
 
-  if (isLoading) {
+  if (isLoading || !isAuthenticated) {
     return (
       <div className="p-10">
         <AccountSkeleton />
@@ -87,7 +88,7 @@ const AccountPage = () => {
   }
 
   return (
-    <div className="space-y-6 pt-6 sm:p-10 sm:pt-6 md:block">
+    <div className="space-y-6 pt-6 sm:p-10 sm:pt-6">
       <div className="space-y-0.5">
         <h1 className="font-bold uppercase italic text-xl md:text-3xl">
           My Account
@@ -98,7 +99,7 @@ const AccountPage = () => {
       </div>
       <Separator className="my-6" />
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <aside className="-mx-4 lg:w-1/5">
+        <aside className="g:w-1/5">
           <SidebarNav items={sidebarNavItems} />
         </aside>
         <div className="flex-1 lg:max-w-2xl">

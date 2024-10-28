@@ -22,7 +22,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   return (
     <nav
       className={cn(
-        "flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1",
+        "flex flex-wrap space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1",
         className
       )}
       {...props}
@@ -36,7 +36,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
             pathname === item.href
               ? "bg-muted hover:bg-muted"
               : "hover:bg-transparent hover:underline",
-            "justify-start"
+            "justify-start px-2 sm:px-4"
           )}
         >
           {item.title}
@@ -44,7 +44,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
       ))}
       <Button
         variant="ghost"
-        className="pl-4 justify-start hover:bg-transparent hover:underline"
+        className="justify-start hover:bg-transparent hover:underline"
         onClick={logout}
       >
         Logout

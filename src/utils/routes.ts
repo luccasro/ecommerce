@@ -34,7 +34,7 @@ export const pageRoutes = {
   account: {
     index: "/account",
     profile: "/account/profile",
-    changePassword: "/account/change-password",
+    changePassword: "/account/update-password",
     appearance: "/account/appearance",
   },
   notFound: "/not-found",

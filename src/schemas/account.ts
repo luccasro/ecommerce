@@ -16,9 +16,7 @@ export const accountFormSchema = z.object({
   dateOfBirth: z.date({
     required_error: "A date of birth is required.",
   }),
-  gender: z.string({
-    message: "Gender must be at least 2 characters.",
-  }),
+  gender: z.string().optional(),
 });
 
 export const changePasswordSchema = z.object({

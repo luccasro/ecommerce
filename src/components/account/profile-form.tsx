@@ -148,12 +148,19 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
+                      showOutsideDays={false}
+                      captionLayout="dropdown"
+                      classNames={{
+                        dropdowns: "flex gap-2",
+                      }}
+                      startMonth={new Date("1900-01-01")}
+                      endMonth={new Date()}
+                      defaultMonth={field.value}
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
