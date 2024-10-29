@@ -50,6 +50,11 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     revalidateOnFocus: false,
   });
 
+  const bag: BagAdapted = data?.bag;
+  const totalProducts = data?.totalProducts;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openMinibag, setOpenMinibag] = useState(false);
+
   const loadBag = useCallback(async () => {
     await mutate();
   }, [mutate]);
@@ -62,11 +67,6 @@ export const BagProvider = ({ children }: { children: ReactNode }) => {
     }
     fetchData();
   }, [isAuthenticated, isLoadingSession, data, mutate, loadBag]);
-
-  const bag: BagAdapted = data?.bag;
-  const totalProducts = data?.totalProducts;
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [openMinibag, setOpenMinibag] = useState(false);
 
   const closeMinibag = () => {
     setOpenMinibag(false);

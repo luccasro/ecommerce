@@ -9,7 +9,7 @@ import { fetcher } from "@/utils/fetcher";
 import { ProductInfo } from "@/components/details/product-info";
 import { DetailsSkeleton } from "@/components/details/details-skeleton";
 import { ImagesSelector } from "@/components/details/image-selector";
-import { apiRoutes } from "@/utils/routes";
+import { apiRoutes, pageRoutes } from "@/utils/routes";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { useBag } from "@/contexts/bag-contex";
 import { HighlightsCarousel } from "@/components/editorial/highlights-carousel";
@@ -43,6 +43,12 @@ const ProductDetails: NextPage = () => {
     addProductRecentlyViewed(product);
   }, [addProductRecentlyViewed, product]);
 
+  useEffect(() => {
+    if (!product && !isLoading) {
+      router.push(pageRoutes.notFound);
+    }
+  }, [error, isLoading, product, router]);
+
   const sideImages = useMemo(
     () => [
       product?.styleImages?.default,
@@ -58,15 +64,11 @@ const ProductDetails: NextPage = () => {
     return <p>An error has ocurred.</p>;
   }
 
-  if (!product && !isLoading) {
-    return <p>Product not found</p>;
-  }
-
   const handleImageClick = (imageURL: string) => {
     setSelectedImage(imageURL);
   };
 
-  if (isLoading) {
+  if (isLoading || !product) {
     return <DetailsSkeleton />;
   }
 

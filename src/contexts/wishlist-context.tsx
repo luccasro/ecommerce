@@ -59,6 +59,9 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     }
   );
 
+  const wishlist: WishlistAdapted = data?.wishlist;
+  const totalItems = wishlist?.items?.length || 0;
+
   const loadWishlist = useCallback(async () => {
     await mutate();
   }, [mutate]);
@@ -71,9 +74,6 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     }
     fetchData();
   }, [isAuthenticated, isLoadingSession, data, mutate, loadWishlist]);
-
-  const wishlist: WishlistAdapted = data?.wishlist;
-  const totalItems = wishlist?.items?.length || 0;
 
   const getIsItemInWishlist = (productId: number) => {
     return wishlist?.items?.some(

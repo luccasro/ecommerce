@@ -18,8 +18,9 @@ export default async function handler(
 
     const user = session?.user as any;
 
-    if (!session || !user || !user.id)
+    if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
+    }
 
     const bag = await prisma.bag.findFirst({
       where: { userId: user.id },

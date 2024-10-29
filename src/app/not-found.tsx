@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <main className="min-h-screen mt-8">
+      <title>E-commerce | Not Found</title>
       <PageContent>
         <h1 className="font-bold uppercase italic pb-6 text-xl md:text-2xl lg:text-3xl">
           Page not found

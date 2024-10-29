@@ -31,7 +31,7 @@ const Bag: NextPage = () => {
         {isLoading ? (
           <BagSkeleton />
         ) : !isEmpty ? (
-          <div className="flex h-full flex-col lg:flex-row">
+          <div className="flex h-full flex-col mb-12 sm:mb-6 lg:flex-row">
             <div className="lg:w-2/3 py-6 lg:pr-6">
               <div className="hidden md:flex pb-4 border-b border-foreground">
                 <div className="font-semibold md:w-3/5 md:min-w-96">Item</div>
@@ -54,7 +54,7 @@ const Bag: NextPage = () => {
               </ul>
             </div>
             {!!bagItems.length && summary && (
-              <div className="lg:w-1/3 rounded-lg py-6 my-6 lg:pl-6">
+              <div className="lg:w-1/3 rounded-lg mt-6 lg:pl-6">
                 <h2 className="text-xl font-medium pb-6">Order summary</h2>
 
                 <div className="flex justify-between text-base text-sm py-4">
