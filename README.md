@@ -24,6 +24,12 @@ The application architecture prioritizes scalability, reusability, and modern we
 
 Built from scratch.
 
+### 🌐 Demo
+
+---
+
+[View Web Demo](https://ecommerce.luccasdev.com)
+
 ### API Structure
 
 ---
@@ -51,14 +57,6 @@ Built from scratch.
         └── index.ts                  # Retrieves the contents of the wishlist
         └── update.ts                 # Updates items in the wishlist
 ```
-
----
-
-### 🌐 Demo
-
----
-
-[View Web Demo](#)
 
 ### 🛠️ Technologies
 
